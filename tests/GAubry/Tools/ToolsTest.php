@@ -65,4 +65,83 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
             array(2000000, 0, array('2', 'Mio')),
         );
     }
+
+    /**
+     * @covers \GAubry\Tools\Tools::arrayMergeRecursiveDistinct
+     * @dataProvider dataProvider_testArrayMergeRecursiveDistinct
+     *
+     * @param array $aArray1
+     * @param array $aArray2
+     * @param array $aResult
+     */
+    public function testArrayMergeRecursiveDistinct (array $aArray1, array $aArray2, array $aResult)
+    {
+        $this->assertEquals(Tools::arrayMergeRecursiveDistinct($aArray1, $aArray2), $aResult);
+    }
+
+    /**
+     * Data provider pour testArrayMergeRecursiveDistinct()
+     */
+    public static function dataProvider_testArrayMergeRecursiveDistinct ()
+    {
+        $aArray1 = array('a' => 'b', 'c' => array('d' => 'e'));
+        return array(
+            array(array(), array(), array()),
+            array($aArray1, array(), $aArray1),
+            array(array(), $aArray1, $aArray1),
+
+            array(array(1, 2), array(3), array(3)),
+            array(array(3), array(1, 2), array(1, 2)),
+
+            array(array('a', 'b'), array('c'), array('c')),
+            array(array('c'), array('a', 'b'), array('a', 'b')),
+
+            array(array(3 => 'a', 'b' => 'c'), array(3 => null), array(3 => null, 'b' => 'c')),
+            array(array(3 => null), array(3 => 'a', 'b' => 'c'), array(3 => 'a', 'b' => 'c')),
+
+            array(array('a' => 'b'), array('a' => array(1, 2)), array('a' => array(1, 2))),
+            array(array('a' => array(1, 2)), array('a' => 'b'), array('a' => 'b')),
+            array(array('a' => array(1, 2)), array('a' => array(3)), array('a' => array(3))),
+
+            array($aArray1, array('a' => 'x'), array('a' => 'x', 'c' => array('d' => 'e'))),
+            array(array('a' => 'x'), $aArray1, array('a' => 'b', 'c' => array('d' => 'e'))),
+
+            array(
+                $aArray1,
+                array('c' => array('d' => 'x'), 'y' => 'z'),
+                array('a' => 'b', 'c' => array('d' => 'x'), 'y' => 'z')
+            ),
+            array(
+                array('c' => array('d' => 'x'), 'y' => 'z'),
+                $aArray1,
+                array('a' => 'b', 'c' => array('d' => 'e'), 'y' => 'z')
+            ),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::isAssociativeArray
+     * @dataProvider dataProvider_testIsAssociativeArray
+     *
+     * @param unknown $aArray
+     * @param unknown $bResult
+     */
+    public function testIsAssociativeArray ($aArray, $bResult)
+    {
+        $this->assertEquals(Tools::isAssociativeArray($aArray),$bResult);
+    }
+
+    /**
+     * Data provider pour testIsAssociativeArray()
+     */
+    public static function dataProvider_testIsAssociativeArray ()
+    {
+        return array(
+            array(array(), false),
+            array(array('a'), false),
+            array(array('a' => 1), true),
+            array(array(1, 2), false),
+            array(array(1, 'a' => 2, 3), true),
+        );
+    }
 }

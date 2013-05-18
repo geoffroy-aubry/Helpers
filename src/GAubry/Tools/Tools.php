@@ -31,7 +31,7 @@ class Tools
      * @param string $s
      * @return string la chaîne spécifiée, en l'encodant en UTF8 seulement si celle-ci ne l'était pas déjà.
      */
-    public static function utf8_encode ($s)
+    public static function utf8Encode ($s)
     {
         return (utf8_encode(utf8_decode($s)) == $s ? $s : utf8_encode($s));
     }
@@ -192,5 +192,67 @@ class Tools
         fclose($fp);
         // ... and return the $data to the caller, with the trailing newline from fgets() removed.
         return rtrim( $data, "\n" );
+    }
+
+    /**
+     * array_merge_recursive() does indeed merge arrays, but it converts values with duplicate
+     * keys to arrays rather than overwriting the value in the first array with the duplicate
+     * value in the second array, as array_merge does. I.e., with array_merge_recursive(),
+     * this happens (documented behavior):
+     *
+     * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+     *     => array('key' => array('org value', 'new value'));
+     *
+     * arrayMergeRecursiveDistinct() does not change the datatypes of the values in the arrays.
+     * Matching keys' values in the second array overwrite those in the first array, as is the
+     * case with array_merge, i.e.:
+     *
+     * arrayMergeRecursiveDistinct(array('key' => 'org value'), array('key' => 'new value'));
+     *     => array('key' => array('new value'));
+     *
+     * EVO sur sous-tableaux indexés :
+     *   Avant :
+     *     array_merge_recursive_distinct(array('a', 'b'), array('c')) => array('c', 'b')
+     *   Maintenant :
+     *     => array('c')
+     *
+     * @param array $aArray1
+     * @param array $aArray2
+     * @return array An array of values resulted from strictly merging the arguments together.
+     * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+     * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+     * @author Geoffroy Aubry
+     */
+    public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArray2) {
+        $aMerged = $aArray1;
+        if (self::isAssociativeArray($aMerged)) {
+            foreach ($aArray2 as $key => &$value) {
+                if (is_array($value) && isset($aMerged[$key]) && is_array($aMerged[$key])) {
+                    $aMerged[$key] = self::arrayMergeRecursiveDistinct($aMerged[$key], $value);
+                } else {
+                    $aMerged[$key] = $value;
+                }
+            }
+        } else  {
+            $aMerged = $aArray2;
+        }
+        return $aMerged;
+    }
+
+    /**
+     * Retourne true ssi le tableau spécifié est associatif.
+     * Retourne false si le tableau est vide.
+     * http://stackoverflow.com/questions/173400/php-arrays-a-good-way-to-check-if-an-array-is-associative-or-sequential
+     *
+     * @param array $aArray
+     * @return bool true ssi le tableau est associatif
+     */
+    public static function isAssociativeArray (array $aArray) {
+        foreach (array_keys($aArray) as $key) {
+            if ( ! is_int($key)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
