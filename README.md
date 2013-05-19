@@ -1,5 +1,5 @@
 # Helpers
-[![Build Status](https://secure.travis-ci.org/geoffroy-aubry/helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/helpers)
+[![Build Status](https://secure.travis-ci.org/geoffroy-aubry/Helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/Helpers)
 
 Some helpers used in several personal packages.
 
@@ -243,10 +243,10 @@ public static function utf8Encode ($s);
 
 ## Copyrights & licensing
 Licensed under the GNU Lesser General Public License v3 (LGPL version 3).
-See [LICENSE](https://github.com/geoffroy-aubry/helpers/blob/stable/LICENSE) file for details.
+See [LICENSE](https://github.com/geoffroy-aubry/Helpers/blob/stable/LICENSE) file for details.
 
 ## ChangeLog
-See [CHANGELOG](https://github.com/geoffroy-aubry/helpers/blob/stable/CHANGELOG.md) file for details.
+See [CHANGELOG](https://github.com/geoffroy-aubry/Helpers/blob/stable/CHANGELOG.md) file for details.
 
 ## Running tests
 To run the test suite, simply:
