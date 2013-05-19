@@ -1,11 +1,11 @@
 <?php
 
-namespace GAubry\Tools;
+namespace GAubry\Helpers;
 
 /**
  * Outils divers et variés...
  */
-class Tools
+class Helpers
 {
     private function __construct()
     {
@@ -199,7 +199,7 @@ class Tools
      *
      * EVO sur sous-tableaux indexés :
      *   Avant :
-     *     array_merge_recursive_distinct(array('a', 'b'), array('c')) => array('c', 'b')
+     *     arrayMergeRecursiveDistinct(array('a', 'b'), array('c')) => array('c', 'b')
      *   Maintenant :
      *     => array('c')
      *
@@ -209,6 +209,7 @@ class Tools
      * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
      * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
      * @author Geoffroy Aubry
+     * @see http://fr2.php.net/manual/en/function.array-merge-recursive.php#89684
      */
     public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArray2) {
         $aMerged = $aArray1;

@@ -27,7 +27,7 @@
     </filter>
 
     <testsuites>
-        <testsuite name="GAubry/Tools">
+        <testsuite name="GAubry/Helpers">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
@@ -35,7 +35,7 @@
     <logging>
         <log type="coverage-html"
              target="build/coverage"
-             title="GAubry/Tools"
+             title="GAubry/Helpers"
              charset="UTF-8"
              yui="true"
              highlight="true"

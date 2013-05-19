@@ -12,5 +12,4 @@ if ( ! file_exists(__DIR__ . '/../vendor/autoload.php')) {
     exit(1);
 }
 
-$oLoader = require __DIR__ . '/../vendor/autoload.php';
-$oLoader->add('GAubry\Tools\Tests', __DIR__);
+require __DIR__ . '/../vendor/autoload.php';

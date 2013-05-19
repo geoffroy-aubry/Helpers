@@ -1,5 +1,5 @@
 {
-    "name":         "geoffroy-aubry/tools",
+    "name":         "geoffroy-aubry/helpers",
     "description":  "bla bla",
     "keywords":     ["bla"],
     "type":         "library",
@@ -7,13 +7,13 @@
     "authors":      [
         {
             "name":     "Geoffroy Aubry",
-            "email":    "gaubry@hi-media.com"
+            "email":    "geoffroy.aubry@free.fr"
         }
     ],
     "require": {
         "php": ">=5.3.3"
     },
     "autoload": {
-        "psr-0": {"GAubry\\Tools": "src/"}
+        "psr-0": {"GAubry\\Helpers": "src/"}
     }
 }

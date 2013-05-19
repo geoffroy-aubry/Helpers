@@ -1,19 +1,19 @@
 <?php
 
-namespace GAubry\Tools\Tests;
+namespace GAubry\Helpers\Tests;
 
-use \GAubry\Tools\Tools;
+use \GAubry\Helpers\Helpers;
 
 /**
  * @category TwengaDeploy
  * @package Tests
  * @author Geoffroy AUBRY <geoffroy.aubry@twenga.com>
  */
-class ToolsTest extends \PHPUnit_Framework_TestCase
+class HelpersTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers \GAubry\Tools\Tools::arrayMergeRecursiveDistinct
+     * @covers \GAubry\Helpers\Helpers::arrayMergeRecursiveDistinct
      * @dataProvider dataProvider_testArrayMergeRecursiveDistinct
      *
      * @param array $aArray1
@@ -22,7 +22,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrayMergeRecursiveDistinct (array $aArray1, array $aArray2, array $aExpected)
     {
-        $this->assertEquals($aExpected, Tools::arrayMergeRecursiveDistinct($aArray1, $aArray2));
+        $this->assertEquals($aExpected, Helpers::arrayMergeRecursiveDistinct($aArray1, $aArray2));
     }
 
     /**
@@ -66,7 +66,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::isAssociativeArray
+     * @covers \GAubry\Helpers\Helpers::isAssociativeArray
      * @dataProvider dataProvider_testIsAssociativeArray
      *
      * @param array $aArray
@@ -74,7 +74,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsAssociativeArray ($aArray, $bExpected)
     {
-        $this->assertEquals($bExpected, Tools::isAssociativeArray($aArray));
+        $this->assertEquals($bExpected, Helpers::isAssociativeArray($aArray));
     }
 
     /**
@@ -92,7 +92,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::stripBashColors
+     * @covers \GAubry\Helpers\Helpers::stripBashColors
      * @dataProvider dataProvider_testStripBashColors
      *
      * @param string $sSource
@@ -100,7 +100,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testStripBashColors ($sSource, $sExpected)
     {
-        $this->assertEquals($sExpected, Tools::stripBashColors($sSource));
+        $this->assertEquals($sExpected, Helpers::stripBashColors($sSource));
     }
 
     /**
@@ -122,7 +122,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::flattenArray
+     * @covers \GAubry\Helpers\Helpers::flattenArray
      * @dataProvider dataProvider_testFlattenArray
      *
      * @param array $aSource
@@ -130,7 +130,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testFlattenArray (array $aSource, array $aExpected)
     {
-        $this->assertEquals($aExpected, Tools::flattenArray($aSource));
+        $this->assertEquals($aExpected, Helpers::flattenArray($aSource));
     }
 
     /**
@@ -149,7 +149,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::intToMultiple
+     * @covers \GAubry\Helpers\Helpers::intToMultiple
      * @dataProvider dataProvider_testIntToMultiple
      *
      * @param int $iValue
@@ -157,7 +157,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testIntToMultiple ($iValue, $bBinaryPrefix, array $aExpected)
     {
-        $this->assertEquals($aExpected, Tools::intToMultiple($iValue, $bBinaryPrefix));
+        $this->assertEquals($aExpected, Helpers::intToMultiple($iValue, $bBinaryPrefix));
     }
 
     /**
@@ -181,7 +181,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::round
+     * @covers \GAubry\Helpers\Helpers::round
      * @dataProvider dataProvider_testRound
      *
      * @param float $fValue
@@ -190,7 +190,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testRound ($fValue, $iPrecision, $sExpected)
     {
-        $this->assertEquals($sExpected, Tools::round($fValue, $iPrecision));
+        $this->assertEquals($sExpected, Helpers::round($fValue, $iPrecision));
     }
 
     /**
@@ -211,7 +211,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \GAubry\Tools\Tools::ucwordWithDelimiters
+     * @covers \GAubry\Helpers\Helpers::ucwordWithDelimiters
      * @dataProvider dataProvider_testUcwordWithDelimiters
      *
      * @param string $sString
@@ -220,7 +220,7 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function testUcwordWithDelimiters ($sString, array $aDelimiters, $sExpected)
     {
-        $this->assertEquals($sExpected, Tools::ucwordWithDelimiters($sString, $aDelimiters));
+        $this->assertEquals($sExpected, Helpers::ucwordWithDelimiters($sString, $aDelimiters));
     }
 
     /**
