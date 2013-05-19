@@ -1,7 +1,7 @@
 {
     "name":         "geoffroy-aubry/helpers",
-    "description":  "bla bla",
-    "keywords":     ["bla"],
+    "description":  "Some helpers used in several personal packages.",
+    "keywords":     ["helpers"],
     "type":         "library",
     "license":      "LGPL-3.0+",
     "authors":      [

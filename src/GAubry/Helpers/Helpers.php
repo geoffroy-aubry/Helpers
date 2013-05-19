@@ -3,7 +3,13 @@
 namespace GAubry\Helpers;
 
 /**
- * Outils divers et variés...
+ * Some helpers used in several personal packages.
+ *
+ * Copyright (c) 2013 Geoffroy Aubry <geoffroy.aubry@free.fr>
+ * Licensed under the GNU Lesser General Public License v3 (LGPL version 3).
+ *
+ * @copyright 2013 Geoffroy Aubry <geoffroy.aubry@free.fr>
+ * @license http://www.gnu.org/licenses/lgpl.html
  */
 class Helpers
 {
@@ -14,8 +20,8 @@ class Helpers
     /**
      * Flatten a multidimensional array (keys are ignored).
      *
-     * @param array $array
-     * @return array tableau à une seule dimension.
+     * @param array $aArray
+     * @return array a one dimensional array.
      * @see http://stackoverflow.com/a/1320156/1813519
      */
     public static function flattenArray (array $aArray) {
@@ -41,6 +47,7 @@ class Helpers
      * On shell error (error code <> 0), throws a RuntimeException with error message..
      *
      * @param string $sCmd shell command
+     * @param string $sOutputPath optional redirection of standard output
      * @return array array filled with every line of output from the command
      * @throws RuntimeException if shell error
      */
@@ -73,8 +80,7 @@ class Helpers
     }
 
     /**
-     * Rounds specified value with precision $iPrecision as native round() function,
-     * but keep trailing zero.
+     * Rounds specified value with precision $iPrecision as native round() function, but keep trailing zeros.
      *
      * @param float $fValue value to round
      * @param int $iPrecision the optional number of decimal digits to round to (can also be negative)
@@ -107,7 +113,7 @@ class Helpers
     }
 
     /**
-     * Returns specified value in the most appropriate unit with that unit.
+     * Returns specified value in the most appropriate unit, with that unit.
      * If $bBinaryPrefix is FALSE then use SI units (i.e. k, M, G, T),
      * else use IED units (i.e. Ki, Mi, Gi, Ti).
      * @see http://en.wikipedia.org/wiki/Binary_prefix
@@ -138,7 +144,7 @@ class Helpers
 
     /**
      * Format a number with grouped thousands.
-     * It is an extended version of number_format() that allow do not specify $decimals.
+     * It is an extended version of number_format() that allows do not specify $decimals.
      *
      * @param float $fNumber The number being formatted.
      * @param string $sDecPoint Sets the separator for the decimal point.
@@ -146,9 +152,9 @@ class Helpers
      * @param int $iDecimals Sets the number of decimal points.
      * @return string A formatted version of $number.
      */
-    public static function numberFormat ($fNumber, $sDecPoint='.', $sThousandsSep=',', $iDecimals=NULL)
+    public static function numberFormat ($fNumber, $sDecPoint='.', $sThousandsSep=',', $iDecimals=null)
     {
-        if ($iDecimals !== NULL) {
+        if ($iDecimals !== null) {
             return number_format($fNumber, $iDecimals, $sDecPoint, $sThousandsSep);
         } else {
             $tmp = explode('.', $fNumber);
@@ -169,7 +175,8 @@ class Helpers
      * @param string $sEnclosure
      * @return string specified array converted into CSV format string
      */
-    public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"') {
+    public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"')
+    {
         // Open a memory "file" for read/write...
         $fp = fopen('php://temp', 'r+');
         fputcsv($fp, $aInput, $sDelimiter, $sEnclosure);
@@ -188,20 +195,20 @@ class Helpers
      * this happens (documented behavior):
      *
      * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
-     *     => array('key' => array('org value', 'new value'));
+     *     ⇒ array('key' => array('org value', 'new value'));
      *
      * arrayMergeRecursiveDistinct() does not change the datatypes of the values in the arrays.
      * Matching keys' values in the second array overwrite those in the first array, as is the
      * case with array_merge, i.e.:
      *
      * arrayMergeRecursiveDistinct(array('key' => 'org value'), array('key' => 'new value'));
-     *     => array('key' => array('new value'));
+     *     ⇒ array('key' => array('new value'));
      *
-     * EVO sur sous-tableaux indexés :
-     *   Avant :
-     *     arrayMergeRecursiveDistinct(array('a', 'b'), array('c')) => array('c', 'b')
-     *   Maintenant :
-     *     => array('c')
+     * EVO on indexed arrays:
+     *   Before:
+     *     arrayMergeRecursiveDistinct(array('a', 'b'), array('c')) ⇒ array('c', 'b')
+     *   Now:
+     *     ⇒ array('c')
      *
      * @param array $aArray1
      * @param array $aArray2
@@ -211,7 +218,8 @@ class Helpers
      * @author Geoffroy Aubry
      * @see http://fr2.php.net/manual/en/function.array-merge-recursive.php#89684
      */
-    public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArray2) {
+    public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArray2)
+    {
         $aMerged = $aArray1;
         if (self::isAssociativeArray($aMerged)) {
             foreach ($aArray2 as $key => &$value) {

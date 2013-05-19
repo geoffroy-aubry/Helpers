@@ -144,7 +144,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             array(array('a' => 'b'), array('b')),
             array(array(1, 'a' => 'b'), array(1, 'b')),
             array(array(array('a' => 'b')), array('b')),
-            array(array(1, array('a' => array('b', 2), 'c')), array(1, 'b', 2, 'c')),
+            array(array(1, 'a' => array('b' => array('c', 2), 'd')), array(1, 'c', 2, 'd')),
         );
     }
 
