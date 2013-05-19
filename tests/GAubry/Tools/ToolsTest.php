@@ -13,60 +13,6 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers \GAubry\Tools\Tools::getFileSizeUnit
-     * @dataProvider dataProvider_testGetFileSizeUnit
-     * @param int $iFileSize taille en octets à changer d'unité
-     * @param array $aExpected tableau (int, string) comprenant d'une part le nombre d'octets contenus dans la plus grande
-     * unité inférieure à la taille spécifiée, et d'autre part le nom de cette unité.
-     */
-    public function testGetFileSizeUnit ($iFileSize, $aExpected)
-    {
-        $aResult = Tools::getFileSizeUnit($iFileSize);
-        $this->assertEquals($aExpected, $aResult);
-    }
-
-    /**
-     * Data provider pour testGetFileSizeUnit()
-     */
-    public static function dataProvider_testGetFileSizeUnit ()
-    {
-        return array(
-            array(0, array(1, 'o')),
-            array(100, array(1, 'o')),
-            array(2000, array(1024, 'Kio')),
-            array(2000000, array(1024*1024, 'Mio')),
-        );
-    }
-
-    /**
-     * @covers \GAubry\Tools\Tools::convertFileSize2String
-     * @dataProvider dataProvider_testConvertFileSize2String
-     * @param int $iSize taille à convertir
-     * @param int $iRefSize référentiel de conversion, si différent de 0
-     * @param array $aExpected un couple comprenant d'une part la taille spécifiée arrondie,
-     * et d'autre part l'unité dans laquelle la taille a été arrondie.
-     */
-    public function testConvertFileSize2String ($iSize, $iRefSize, $aExpected)
-    {
-        $aResult = Tools::convertFileSize2String($iSize, $iRefSize);
-        $this->assertEquals($aExpected, $aResult);
-    }
-
-    /**
-     * Data provider pour testConvertFileSize2String()
-     */
-    public static function dataProvider_testConvertFileSize2String ()
-    {
-        return array(
-            array(0, 0, array('0', 'o')),
-            array(100, 0, array('100', 'o')),
-            array(100, 2000000, array('<1', 'Mio')),
-            array(2000, 0, array('2', 'Kio')),
-            array(2000000, 0, array('2', 'Mio')),
-        );
-    }
-
-    /**
      * @covers \GAubry\Tools\Tools::arrayMergeRecursiveDistinct
      * @dataProvider dataProvider_testArrayMergeRecursiveDistinct
      *
@@ -74,15 +20,15 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      * @param array $aArray2
      * @param array $aResult
      */
-    public function testArrayMergeRecursiveDistinct (array $aArray1, array $aArray2, array $aResult)
+    public function testArrayMergeRecursiveDistinct (array $aArray1, array $aArray2, array $aExpected)
     {
-        $this->assertEquals(Tools::arrayMergeRecursiveDistinct($aArray1, $aArray2), $aResult);
+        $this->assertEquals($aExpected, Tools::arrayMergeRecursiveDistinct($aArray1, $aArray2));
     }
 
     /**
      * Data provider pour testArrayMergeRecursiveDistinct()
      */
-    public static function dataProvider_testArrayMergeRecursiveDistinct ()
+    public function dataProvider_testArrayMergeRecursiveDistinct ()
     {
         $aArray1 = array('a' => 'b', 'c' => array('d' => 'e'));
         return array(
@@ -123,18 +69,18 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
      * @covers \GAubry\Tools\Tools::isAssociativeArray
      * @dataProvider dataProvider_testIsAssociativeArray
      *
-     * @param unknown $aArray
-     * @param unknown $bResult
+     * @param array $aArray
+     * @param bool $bResult
      */
-    public function testIsAssociativeArray ($aArray, $bResult)
+    public function testIsAssociativeArray ($aArray, $bExpected)
     {
-        $this->assertEquals(Tools::isAssociativeArray($aArray),$bResult);
+        $this->assertEquals($bExpected, Tools::isAssociativeArray($aArray));
     }
 
     /**
      * Data provider pour testIsAssociativeArray()
      */
-    public static function dataProvider_testIsAssociativeArray ()
+    public function dataProvider_testIsAssociativeArray ()
     {
         return array(
             array(array(), false),
@@ -142,6 +88,152 @@ class ToolsTest extends \PHPUnit_Framework_TestCase
             array(array('a' => 1), true),
             array(array(1, 2), false),
             array(array(1, 'a' => 2, 3), true),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::stripBashColors
+     * @dataProvider dataProvider_testStripBashColors
+     *
+     * @param string $sSource
+     * @param string $sExpected
+     */
+    public function testStripBashColors ($sSource, $sExpected)
+    {
+        $this->assertEquals($sExpected, Tools::stripBashColors($sSource));
+    }
+
+    /**
+     * Data provider pour testStripBashColors()
+     */
+    public function dataProvider_testStripBashColors ()
+    {
+        return array(
+            array('', ''),
+            array('a', 'a'),
+            array("\033[0m", ''),
+            array("\033[1;34m", ''),
+            array("\033[5;32;47m", ''),
+            array("\033[1;34mxyz", 'xyz'),
+            array("xyz\033[1;34m", 'xyz'),
+            array("x\033[1;34my\033[0mz", 'xyz'),
+            array("x\x1B[1;34my\x1B[0mz", 'xyz'),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::flattenArray
+     * @dataProvider dataProvider_testFlattenArray
+     *
+     * @param array $aSource
+     * @param array $aExpected
+     */
+    public function testFlattenArray (array $aSource, array $aExpected)
+    {
+        $this->assertEquals($aExpected, Tools::flattenArray($aSource));
+    }
+
+    /**
+     * Data provider pour testFlattenArray()
+     */
+    public function dataProvider_testFlattenArray ()
+    {
+        return array(
+            array(array(), array()),
+            array(array(1), array(1)),
+            array(array('a' => 'b'), array('b')),
+            array(array(1, 'a' => 'b'), array(1, 'b')),
+            array(array(array('a' => 'b')), array('b')),
+            array(array(1, array('a' => array('b', 2), 'c')), array(1, 'b', 2, 'c')),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::intToMultiple
+     * @dataProvider dataProvider_testIntToMultiple
+     *
+     * @param int $iValue
+     * @param array $aExpected
+     */
+    public function testIntToMultiple ($iValue, $bBinaryPrefix, array $aExpected)
+    {
+        $this->assertEquals($aExpected, Tools::intToMultiple($iValue, $bBinaryPrefix));
+    }
+
+    /**
+     * Data provider pour testIntToMultiple()
+     */
+    public function dataProvider_testIntToMultiple ()
+    {
+        return array(
+            array(0, false, array(0, '')),
+            array(10, false, array(10, '')),
+            array(1024, false, array(1.024, 'k')),
+            array(17825792, false, array(17.825792, 'M')),
+            array(1073741824, false, array(1.073741824, 'G')),
+
+            array(0, true, array(0, '')),
+            array(10, true, array(10, '')),
+            array(1024, true, array(1, 'Ki')),
+            array(17825792, true, array(17, 'Mi')),
+            array(1073741824, true, array(1, 'Gi')),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::round
+     * @dataProvider dataProvider_testRound
+     *
+     * @param float $fValue
+     * @param int $iPrecision
+     * @param string $sExpected
+     */
+    public function testRound ($fValue, $iPrecision, $sExpected)
+    {
+        $this->assertEquals($sExpected, Tools::round($fValue, $iPrecision));
+    }
+
+    /**
+     * Data provider pour testRound()
+     */
+    public function dataProvider_testRound ()
+    {
+        return array(
+            array(0, 0, '0'),
+            array(1, 3, '1.000'),
+            array(156.789, 0, '157'),
+            array(156.789, 2, '156.79'),
+            array(156.789, 4, '156.7890'),
+            array(156.789, -1, '160'),
+            array(156.789, -2, '200'),
+            array(156.789, -3, '0'),
+        );
+    }
+
+    /**
+     * @covers \GAubry\Tools\Tools::ucwordWithDelimiters
+     * @dataProvider dataProvider_testUcwordWithDelimiters
+     *
+     * @param string $sString
+     * @param array $aDelimiters
+     * @param string $sExpected
+     */
+    public function testUcwordWithDelimiters ($sString, array $aDelimiters, $sExpected)
+    {
+        $this->assertEquals($sExpected, Tools::ucwordWithDelimiters($sString, $aDelimiters));
+    }
+
+    /**
+     * Data provider pour testRound()
+     */
+    public function dataProvider_testUcwordWithDelimiters ()
+    {
+        return array(
+            array('hello world', array(), 'Hello World'),
+            array('HELLO world', array(), 'HELLO World'),
+            array('hel-lo world', array(), 'Hel-lo World'),
+            array('hel-lo world', array('-'), 'Hel-Lo World'),
+            array("hel-lo wo'rld", array('-', "'"), "Hel-Lo Wo'Rld"),
         );
     }
 }

@@ -12,24 +12,23 @@ class Tools
     }
 
     /**
-     * Transforme un tableau multidimensionnel en un tableau à une seule dimension,
-     * en ramenant toutes les feuilles au premier niveau.
+     * Flatten a multidimensional array (keys are ignored).
      *
      * @param array $array
      * @return array tableau à une seule dimension.
      * @see http://stackoverflow.com/a/1320156/1813519
      */
-    public static function flatten (array $array) {
-        $return = array();
-        array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
-        return $return;
+    public static function flattenArray (array $aArray) {
+        $aFlattened = array();
+        array_walk_recursive($aArray, function($a) use (&$aFlattened) {$aFlattened[] = $a;});
+        return $aFlattened;
     }
 
     /**
-     * Retourne la chaîne spécifiée, en l'encodant en UTF8 seulement si celle-ci ne l'était pas déjà.
+     * Returns the UTF-8 translation of the specified string, only if not already in UTF-8.
      *
      * @param string $s
-     * @return string la chaîne spécifiée, en l'encodant en UTF8 seulement si celle-ci ne l'était pas déjà.
+     * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
      */
     public static function utf8Encode ($s)
     {
@@ -37,12 +36,13 @@ class Tools
     }
 
     /**
-     * Exécute la commande shell spécifiée et retourne la sortie découpée par ligne dans un tableau.
-     * En cas d'erreur shell (code d'erreur <> 0), lance une exception incluant le message d'erreur.
+     * Executes the given shell command and returns an array filled with every line of output from the command.
+     * Trailing whitespace, such as \n, is not included in this array.
+     * On shell error (error code <> 0), throws a RuntimeException with error message..
      *
-     * @param string $sCmd
-     * @return array tableau indexé du flux de sortie shell découpé par ligne
-     * @throws RuntimeException en cas d'erreur shell
+     * @param string $sCmd shell command
+     * @return array array filled with every line of output from the command
+     * @throws RuntimeException if shell error
      */
     public static function exec ($sCmd, $sOutputPath='')
     {
@@ -61,20 +61,43 @@ class Tools
         return $aResult;
     }
 
+    /**
+     * Remove all Bash color sequences from the specified string.
+     *
+     * @param string $sMsg
+     * @return string specified string without any Bash color sequence.
+     */
     public static function stripBashColors ($sMsg)
     {
-        return preg_replace('/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/', '', $sMsg);
+        return preg_replace('/\x1B\[([0-9]{1,2}(;[0-9]{1,2}){0,2})?[m|K]/', '', $sMsg);
     }
 
-    // Allow negative precision.
+    /**
+     * Rounds specified value with precision $iPrecision as native round() function,
+     * but keep trailing zero.
+     *
+     * @param float $fValue value to round
+     * @param int $iPrecision the optional number of decimal digits to round to (can also be negative)
+     * @return string
+     */
     public static function round ($fValue, $iPrecision=0)
     {
         $sPrintfPrecision = max(0, $iPrecision);
         return sprintf("%01.{$sPrintfPrecision}f", round($fValue, $iPrecision));
     }
 
-    public static function ucwordWithDelimiters ($str, array $aDelimiters=array("'", '-')){
-        $sReturn = ucwords(strtolower($str));
+    /**
+     * Returns a string with the first character of each word in specified string capitalized,
+     * if that character is alphabetic.
+     * Additionally, each character that is immediately after one of $aDelimiters will be capitalized too.
+     *
+     * @param string $sString
+     * @param array $aDelimiters
+     * @return string
+     */
+    public static function ucwordWithDelimiters ($sString, array $aDelimiters=array())
+    {
+        $sReturn = ucwords($sString);
         foreach ($aDelimiters as $sDelimiter) {
             if (strpos($sReturn, $sDelimiter) !== false) {
                 $sReturn = implode($sDelimiter, array_map('ucfirst', explode($sDelimiter, $sReturn)));
@@ -83,21 +106,34 @@ class Tools
         return $sReturn;
     }
 
-    public static function intToSI ($iValue)
+    /**
+     * Returns specified value in the most appropriate unit with that unit.
+     * If $bBinaryPrefix is FALSE then use SI units (i.e. k, M, G, T),
+     * else use IED units (i.e. Ki, Mi, Gi, Ti).
+     * @see http://en.wikipedia.org/wiki/Binary_prefix
+     *
+     * @param int $iValue
+     * @param bool $bBinaryPrefix
+     * @return array a pair constituted by specified value in the most appropriate unit and that unit
+     */
+    public static function intToMultiple ($iValue, $bBinaryPrefix=false)
     {
-        $prefixes = array(12 => 'T', 9 => 'G', 6 => 'M', 3 => 'k', 0 => '');
+        static $aAllPrefixes = array(
+            10 => array(12 => 'T', 9 => 'G', 6 => 'M', 3 => 'k', 0 => ''),
+            2 => array(40 => 'Ti', 30 => 'Gi', 20 => 'Mi', 10 => 'Ki', 0 => ''),
+        );
 
+        $iBase = ($bBinaryPrefix ? 2 : 10);
+        $aPrefixes = $aAllPrefixes[$iBase];
         $m = 0;
-        foreach ($prefixes as $multiple => $s) {
-            if ($iValue >= pow(10, $multiple)) {
-                $m = $multiple;
+        foreach (array_keys($aPrefixes) as $iMultiple) {
+            if ($iValue >= pow($iBase, $iMultiple)) {
+                $m = $iMultiple;
                 break;
             }
         }
 
-        //$decimals = ($m > 0 && $val/pow(10, $m) < 100 ? 1 : 0);
-        $decimals = ($m === 0 ? 0 : 1);
-        return array(round($iValue / pow(10, $m), $decimals), $prefixes[$m]);
+        return array($iValue / pow($iBase, $m), $aPrefixes[$m]);
     }
 
     /**
@@ -125,73 +161,24 @@ class Tools
     }
 
     /**
-     * Retourne un couple comprenant d'une part le nombre d'octets contenus dans la plus grande unité informatique
-     * inférieure à la taille spécifiée, et d'autre part le nom de cette unité.
+     * Formats a line passed as a fields array as CSV and return it, without the trailing newline.
+     * Inspiration: http://www.php.net/manual/en/function.str-getcsv.php#88773
      *
-     * Par exemple, si $iFileSize vaut 2000, alors le résultat sera : array(1024, 'Kio').
-     *
-     * @param int $iFileSize taille en octets à changer d'unité
-     * @return array tableau (int, string) comprenant d'une part le nombre d'octets contenus dans la plus grande
-     * unité inférieure à la taille spécifiée, et d'autre part le nom de cette unité.
+     * @param array $aInput
+     * @param string $sDelimiter
+     * @param string $sEnclosure
+     * @return string specified array converted into CSV format string
      */
-    public static function getFileSizeUnit ($iFileSize)
-    {
-        if ($iFileSize < 1024) {
-            $iUnit = 1;
-            $sUnit = 'o';
-        } else if ($iFileSize < 1024*1024) {
-            $iUnit = 1024;
-            $sUnit = 'Kio';
-        } else {
-            $iUnit = 1024*1024;
-            $sUnit = 'Mio';
-        }
-        return array($iUnit, $sUnit);
-    }
-
-    /**
-     * Retourne un couple comprenant d'une part la taille spécifiée arrondie,
-     * et d'autre part l'unité dans laquelle la taille a été arrondie.
-     *
-     * Le second paramètre, si <> de 0, permet de spécifier une taille de référence pour le calcul de l'unité.
-     *
-     * Par exemple :
-     * (100, 0) => ('100', 'o')
-     * (100, 2000000) => ('<1', 'Mio')
-     * (200, 0) => ('2', 'Kio')
-     *
-     * @param int $iSize taille à convertir
-     * @param int $iRefSize référentiel de conversion, si différent de 0
-     * @return array un couple comprenant d'une part la taille spécifiée arrondie,
-     * et d'autre part l'unité dans laquelle la taille a été arrondie.
-     */
-    public static function convertFileSize2String ($iSize, $iRefSize=0)
-    {
-        if ($iRefSize === 0) {
-            $iRefSize = $iSize;
-        }
-        list($iUnit, $sUnit) = self::getFileSizeUnit($iRefSize);
-
-        $sFileSize = round($iSize/$iUnit);
-        if ($sFileSize == 0 && $iSize > 0) {
-            $sFileSize = '<1';
-        }
-        return array($sFileSize, $sUnit);
-    }
-
-    public static function strPutCSV ($input, $delimiter = ',', $enclosure = '"') {
+    public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"') {
         // Open a memory "file" for read/write...
         $fp = fopen('php://temp', 'r+');
-        // ... write the $input array to the "file" using fputcsv()...
-        fputcsv($fp, $input, $delimiter, $enclosure);
+        fputcsv($fp, $aInput, $sDelimiter, $sEnclosure);
         // ... rewind the "file" so we can read what we just wrote...
         rewind($fp);
-        // ... read the entire line into a variable...
-        $data = fgets($fp);
-        // ... close the "file"...
+        $sData = fgets($fp);
         fclose($fp);
         // ... and return the $data to the caller, with the trailing newline from fgets() removed.
-        return rtrim( $data, "\n" );
+        return rtrim($sData, "\n");
     }
 
     /**
@@ -240,12 +227,13 @@ class Tools
     }
 
     /**
-     * Retourne true ssi le tableau spécifié est associatif.
-     * Retourne false si le tableau est vide.
+     * Returns TRUE iff the specified array is associative.
+     * Returns FALSE if the specified array is empty.
+     *
      * http://stackoverflow.com/questions/173400/php-arrays-a-good-way-to-check-if-an-array-is-associative-or-sequential
      *
      * @param array $aArray
-     * @return bool true ssi le tableau est associatif
+     * @return bool true ssi iff the specified array is associative
      */
     public static function isAssociativeArray (array $aArray) {
         foreach (array_keys($aArray) as $key) {
