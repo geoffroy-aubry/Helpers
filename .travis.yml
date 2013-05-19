@@ -5,7 +5,7 @@ php:
   - 5.3
 
 before_script:
-  - cp phpunit-dist.php phpunit.php
+  - cp phpunit-dist.xml phpunit.xml
 script: phpunit --configuration phpunit.xml
 
 notifications:
