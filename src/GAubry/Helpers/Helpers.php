@@ -65,6 +65,7 @@ class Helpers
      */
     public static function exec ($sCmd, $sOutputPath = '', $sErrorPath = '', $bAppend = false)
     {
+        // set STDOUT and STDERR
         $sAppending = ($bAppend ? '>>' : '>');
         if (empty($sOutputPath)) {
             if (empty($sErrorPath)) {
@@ -78,9 +79,11 @@ class Helpers
             $sStreams = "1$sAppending$sOutputPath 2$sAppending$sErrorPath";
         }
 
+        // execute cmd
         $sFullCmd = "( $sCmd ) $sStreams";
         exec($sFullCmd, $aResult, $iReturnCode);
 
+        // retrieve content of STDOUT and STDERR
         if (empty($sOutputPath)) {
             $aOutput = $aResult;
             if (empty($sErrorPath)) {
@@ -96,6 +99,7 @@ class Helpers
             $aError = file($sErrorPath, FILE_IGNORE_NEW_LINES);
         }
 
+        // result
         if ($iReturnCode !== 0) {
             throw new \RuntimeException(
                 "Exit code not null: $iReturnCode. Result: '" . implode("\n", $aError) . "'",
