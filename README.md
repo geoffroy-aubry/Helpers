@@ -1,5 +1,6 @@
 # Helpers
 [![Build Status](https://secure.travis-ci.org/geoffroy-aubry/Helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/Helpers)
+[![Coverage Status](https://coveralls.io/repos/geoffroy-aubry/Helpers/badge.png?branch=stable)](https://coveralls.io/r/geoffroy-aubry/Helpers)
 
 Some helpers used in several personal packages.
 
