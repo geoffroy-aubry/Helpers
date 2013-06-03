@@ -4,17 +4,12 @@ namespace GAubry\Helpers\Tests;
 
 use \GAubry\Helpers\Helpers;
 
-/**
- * @category TwengaDeploy
- * @package Tests
- * @author Geoffroy AUBRY <geoffroy.aubry@twenga.com>
- */
 class HelpersTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * @covers \GAubry\Helpers\Helpers::arrayMergeRecursiveDistinct
-     * @dataProvider dataProvider_testArrayMergeRecursiveDistinct
+     * @dataProvider dataProviderTestArrayMergeRecursiveDistinct
      *
      * @param array $aArray1
      * @param array $aArray2
@@ -28,7 +23,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testArrayMergeRecursiveDistinct()
      */
-    public function dataProvider_testArrayMergeRecursiveDistinct ()
+    public function dataProviderTestArrayMergeRecursiveDistinct ()
     {
         $aArray1 = array('a' => 'b', 'c' => array('d' => 'e'));
         return array(
@@ -67,7 +62,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::isAssociativeArray
-     * @dataProvider dataProvider_testIsAssociativeArray
+     * @dataProvider dataProviderTestIsAssociativeArray
      *
      * @param array $aArray
      * @param bool $bResult
@@ -80,7 +75,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testIsAssociativeArray()
      */
-    public function dataProvider_testIsAssociativeArray ()
+    public function dataProviderTestIsAssociativeArray ()
     {
         return array(
             array(array(), false),
@@ -93,7 +88,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::stripBashColors
-     * @dataProvider dataProvider_testStripBashColors
+     * @dataProvider dataProviderTestStripBashColors
      *
      * @param string $sSource
      * @param string $sExpected
@@ -106,7 +101,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testStripBashColors()
      */
-    public function dataProvider_testStripBashColors ()
+    public function dataProviderTestStripBashColors ()
     {
         return array(
             array('', ''),
@@ -123,7 +118,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::flattenArray
-     * @dataProvider dataProvider_testFlattenArray
+     * @dataProvider dataProviderTestFlattenArray
      *
      * @param array $aSource
      * @param array $aExpected
@@ -136,7 +131,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testFlattenArray()
      */
-    public function dataProvider_testFlattenArray ()
+    public function dataProviderTestFlattenArray ()
     {
         return array(
             array(array(), array()),
@@ -150,7 +145,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::intToMultiple
-     * @dataProvider dataProvider_testIntToMultiple
+     * @dataProvider dataProviderTestIntToMultiple
      *
      * @param int $iValue
      * @param array $aExpected
@@ -163,7 +158,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testIntToMultiple()
      */
-    public function dataProvider_testIntToMultiple ()
+    public function dataProviderTestIntToMultiple ()
     {
         return array(
             array(0, false, array(0, '')),
@@ -182,7 +177,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::round
-     * @dataProvider dataProvider_testRound
+     * @dataProvider dataProviderTestRound
      *
      * @param float $fValue
      * @param int $iPrecision
@@ -196,7 +191,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testRound()
      */
-    public function dataProvider_testRound ()
+    public function dataProviderTestRound ()
     {
         return array(
             array(0, 0, '0'),
@@ -212,7 +207,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \GAubry\Helpers\Helpers::ucwordWithDelimiters
-     * @dataProvider dataProvider_testUcwordWithDelimiters
+     * @dataProvider dataProviderTestUcwordWithDelimiters
      *
      * @param string $sString
      * @param array $aDelimiters
@@ -226,7 +221,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider pour testRound()
      */
-    public function dataProvider_testUcwordWithDelimiters ()
+    public function dataProviderTestUcwordWithDelimiters ()
     {
         return array(
             array('hello world', array(), 'Hello World'),
@@ -235,5 +230,121 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             array('hel-lo world', array('-'), 'Hel-Lo World'),
             array("hel-lo wo'rld", array('-', "'"), "Hel-Lo Wo'Rld"),
         );
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecSimpleStdOut ()
+    {
+        $sCmd = "echo 'Hello\nWorld'";
+        $aExpected = array('Hello', 'World');
+        $this->assertEquals($aExpected, Helpers::exec($sCmd));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithOutputPath ()
+    {
+        $sStdOut = '/tmp/stdout';
+        @unlink($sStdOut);
+        $sCmd = "echo \"Hello\nWorld\"";
+        $aExpected = array('Hello', 'World');
+        $this->assertEquals($aExpected, Helpers::exec($sCmd, $sStdOut));
+        $this->assertEquals($aExpected, file($sStdOut, FILE_IGNORE_NEW_LINES));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithOutputPathWithAppend ()
+    {
+        $sStdOut = '/tmp/stdout';
+        @unlink($sStdOut);
+        $aExpected = array('Hello', 'World');
+        Helpers::exec("echo 'Hello'", $sStdOut, '', true);
+        $this->assertEquals($aExpected, Helpers::exec("echo 'World'", $sStdOut, '', true));
+        $this->assertEquals($aExpected, file($sStdOut, FILE_IGNORE_NEW_LINES));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithOnlyErrorCode ()
+    {
+        $sCmd = 'false';
+        $aExpected = array('Hello', 'World');
+        $this->setExpectedException('\RuntimeException', "Exit code not null: 1. Result: ''", 1);
+        $this->assertEquals($aExpected, Helpers::exec($sCmd));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithError ()
+    {
+        $sCmd = 'ls unknown_file';
+        $aExpected = array('Hello', 'World');
+        $this->setExpectedException('\RuntimeException', "Exit code not null: 2. Result: '", 2);
+        $this->assertEquals($aExpected, Helpers::exec($sCmd));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithOutputPathWithError ()
+    {
+        $sStdOut = '/tmp/stdout';
+        @unlink($sStdOut);
+        $sCmd = 'echo Hello && ls unknown_file';
+        $aExpected = array('Hello');
+        try {
+            Helpers::exec($sCmd, $sStdOut);
+        } catch (\RuntimeException $oException) {
+            $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
+            $this->assertEquals(2, $oException->getCode());
+        }
+        $this->assertEquals($aExpected, file($sStdOut, FILE_IGNORE_NEW_LINES));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithOutputPathAndErrorPathWithError ()
+    {
+        $sStdOut = '/tmp/stdout';
+        @unlink($sStdOut);
+        $sStdErr = '/tmp/stderr';
+        @unlink($sStdErr);
+        $sCmd = "LANGUAGE=en_US.UTF-8; echo 'Hello' && ls unknown_file";
+        $aExpected = array('Hello');
+        $aErrorExpected = array('ls: cannot access unknown_file: No such file or directory');
+        try {
+            Helpers::exec($sCmd, $sStdOut, $sStdErr);
+        } catch (\RuntimeException $oException) {
+            $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
+            $this->assertEquals(2, $oException->getCode());
+        }
+        $this->assertEquals($aExpected, file($sStdOut, FILE_IGNORE_NEW_LINES));
+        $this->assertEquals($aErrorExpected, file($sStdErr, FILE_IGNORE_NEW_LINES));
+    }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::exec
+     */
+    public function testExecWithErrorPathWithError ()
+    {
+        $sStdErr = '/tmp/stderr';
+        @unlink($sStdErr);
+        $sCmd = 'LANGUAGE=en_US.UTF-8; echo Hello && ls unknown_file';
+        $aErrorExpected = array('ls: cannot access unknown_file: No such file or directory');
+        try {
+            Helpers::exec($sCmd, '', $sStdErr);
+        } catch (\RuntimeException $oException) {
+            $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
+            $this->assertEquals(2, $oException->getCode());
+        }
+        $this->assertEquals($aErrorExpected, file($sStdErr, FILE_IGNORE_NEW_LINES));
     }
 }

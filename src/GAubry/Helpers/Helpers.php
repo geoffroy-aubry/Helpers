@@ -4,6 +4,7 @@ namespace GAubry\Helpers;
 
 /**
  * Some helpers used in several personal packages.
+ * @SuppressWarnings(TooManyMethods)
  *
  * Copyright (c) 2013 Geoffroy Aubry <geoffroy.aubry@free.fr>
  * Licensed under the GNU Lesser General Public License v3 (LGPL version 3).
@@ -13,6 +14,9 @@ namespace GAubry\Helpers;
  */
 class Helpers
 {
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }
@@ -24,9 +28,15 @@ class Helpers
      * @return array a one dimensional array.
      * @see http://stackoverflow.com/a/1320156/1813519
      */
-    public static function flattenArray (array $aArray) {
+    public static function flattenArray (array $aArray)
+    {
         $aFlattened = array();
-        array_walk_recursive($aArray, function($a) use (&$aFlattened) {$aFlattened[] = $a;});
+        array_walk_recursive(
+            $aArray,
+            function ($mValue) use (&$aFlattened) {
+                $aFlattened[] = $mValue;
+            }
+        );
         return $aFlattened;
     }
 
@@ -36,36 +46,63 @@ class Helpers
      * @param string $s
      * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
      */
-    public static function utf8Encode ($s)
+    public static function utf8Encode ($str)
     {
-        return (utf8_encode(utf8_decode($s)) == $s ? $s : utf8_encode($s));
+        return (utf8_encode(utf8_decode($str)) == $str ? $str : utf8_encode($str));
     }
 
     /**
      * Executes the given shell command and returns an array filled with every line of output from the command.
      * Trailing whitespace, such as \n, is not included in this array.
-     * On shell error (error code <> 0), throws a RuntimeException with error message..
+     * On shell error (exit code <> 0), throws a \RuntimeException with error message..
      *
      * @param string $sCmd shell command
      * @param string $sOutputPath optional redirection of standard output
+     * @param string $sErrorPath optional redirection of standard error
+     * @param bool $bAppend true to append to specified files
      * @return array array filled with every line of output from the command
-     * @throws RuntimeException if shell error
+     * @throws \RuntimeException if shell error
      */
-    public static function exec ($sCmd, $sOutputPath='')
+    public static function exec ($sCmd, $sOutputPath = '', $sErrorPath = '', $bAppend = false)
     {
+        $sAppending = ($bAppend ? '>>' : '>');
         if (empty($sOutputPath)) {
-            $sFullCmd = '( ' . $sCmd . ' ) 2>&1';
+            if (empty($sErrorPath)) {
+                $sStreams = '2>&1';
+            } else {
+                $sStreams = "2$sAppending$sErrorPath";
+            }
+        } elseif (empty($sErrorPath)) {
+            $sStreams = "2>&1 1$sAppending$sOutputPath";
         } else {
-            $sFullCmd = "( $sCmd ) 1>$sOutputPath 2>&1 & echo $!";
+            $sStreams = "1$sAppending$sOutputPath 2$sAppending$sErrorPath";
         }
+
+        $sFullCmd = "( $sCmd ) $sStreams";
         exec($sFullCmd, $aResult, $iReturnCode);
+
+        if (empty($sOutputPath)) {
+            $aOutput = $aResult;
+            if (empty($sErrorPath)) {
+                $aError = $aResult;
+            } else {
+                $aError = file($sErrorPath, FILE_IGNORE_NEW_LINES);
+            }
+        } elseif (empty($sErrorPath)) {
+            $aOutput = file($sOutputPath, FILE_IGNORE_NEW_LINES);
+            $aError = $aResult;
+        } else {
+            $aOutput = file($sOutputPath, FILE_IGNORE_NEW_LINES);
+            $aError = file($sErrorPath, FILE_IGNORE_NEW_LINES);
+        }
+
         if ($iReturnCode !== 0) {
-            throw new RuntimeException(
-                "Exit code not null: $iReturnCode. Result: '" . implode("\n", $aResult) . "'",
+            throw new \RuntimeException(
+                "Exit code not null: $iReturnCode. Result: '" . implode("\n", $aError) . "'",
                 $iReturnCode
             );
         }
-        return $aResult;
+        return $aOutput;
     }
 
     /**
@@ -86,7 +123,7 @@ class Helpers
      * @param int $iPrecision the optional number of decimal digits to round to (can also be negative)
      * @return string
      */
-    public static function round ($fValue, $iPrecision=0)
+    public static function round ($fValue, $iPrecision = 0)
     {
         $sPrintfPrecision = max(0, $iPrecision);
         return sprintf("%01.{$sPrintfPrecision}f", round($fValue, $iPrecision));
@@ -101,7 +138,7 @@ class Helpers
      * @param array $aDelimiters
      * @return string
      */
-    public static function ucwordWithDelimiters ($sString, array $aDelimiters=array())
+    public static function ucwordWithDelimiters ($sString, array $aDelimiters = array())
     {
         $sReturn = ucwords($sString);
         foreach ($aDelimiters as $sDelimiter) {
@@ -122,7 +159,7 @@ class Helpers
      * @param bool $bBinaryPrefix
      * @return array a pair constituted by specified value in the most appropriate unit and that unit
      */
-    public static function intToMultiple ($iValue, $bBinaryPrefix=false)
+    public static function intToMultiple ($iValue, $bBinaryPrefix = false)
     {
         static $aAllPrefixes = array(
             10 => array(12 => 'T', 9 => 'G', 6 => 'M', 3 => 'k', 0 => ''),
@@ -131,15 +168,15 @@ class Helpers
 
         $iBase = ($bBinaryPrefix ? 2 : 10);
         $aPrefixes = $aAllPrefixes[$iBase];
-        $m = 0;
+        $iMaxMultiple = 0;
         foreach (array_keys($aPrefixes) as $iMultiple) {
             if ($iValue >= pow($iBase, $iMultiple)) {
-                $m = $iMultiple;
+                $iMaxMultiple = $iMultiple;
                 break;
             }
         }
 
-        return array($iValue / pow($iBase, $m), $aPrefixes[$m]);
+        return array($iValue / pow($iBase, $iMaxMultiple), $aPrefixes[$iMaxMultiple]);
     }
 
     /**
@@ -152,7 +189,7 @@ class Helpers
      * @param int $iDecimals Sets the number of decimal points.
      * @return string A formatted version of $number.
      */
-    public static function numberFormat ($fNumber, $sDecPoint='.', $sThousandsSep=',', $iDecimals=null)
+    public static function numberFormat ($fNumber, $sDecPoint = '.', $sThousandsSep = ',', $iDecimals = null)
     {
         if ($iDecimals !== null) {
             return number_format($fNumber, $iDecimals, $sDecPoint, $sThousandsSep);
@@ -178,12 +215,12 @@ class Helpers
     public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"')
     {
         // Open a memory "file" for read/write...
-        $fp = fopen('php://temp', 'r+');
-        fputcsv($fp, $aInput, $sDelimiter, $sEnclosure);
+        $hTmpFile = fopen('php://temp', 'r+');
+        fputcsv($hTmpFile, $aInput, $sDelimiter, $sEnclosure);
         // ... rewind the "file" so we can read what we just wrote...
-        rewind($fp);
-        $sData = fgets($fp);
-        fclose($fp);
+        rewind($hTmpFile);
+        $sData = fgets($hTmpFile);
+        fclose($hTmpFile);
         // ... and return the $data to the caller, with the trailing newline from fgets() removed.
         return rtrim($sData, "\n");
     }
@@ -229,7 +266,7 @@ class Helpers
                     $aMerged[$key] = $value;
                 }
             }
-        } else  {
+        } else {
             $aMerged = $aArray2;
         }
         return $aMerged;
@@ -237,16 +274,17 @@ class Helpers
 
     /**
      * Returns TRUE iff the specified array is associative.
-     * Returns FALSE if the specified array is empty.
+     * If the specified array is empty, then return FALSE.
      *
      * http://stackoverflow.com/questions/173400/php-arrays-a-good-way-to-check-if-an-array-is-associative-or-sequential
      *
      * @param array $aArray
      * @return bool true ssi iff the specified array is associative
      */
-    public static function isAssociativeArray (array $aArray) {
+    public static function isAssociativeArray (array $aArray)
+    {
         foreach (array_keys($aArray) as $key) {
-            if ( ! is_int($key)) {
+            if (! is_int($key)) {
                 return true;
             }
         }
