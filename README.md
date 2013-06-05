@@ -61,14 +61,16 @@ public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArra
 /**
  * Executes the given shell command and returns an array filled with every line of output from the command.
  * Trailing whitespace, such as \n, is not included in this array.
- * On shell error (error code <> 0), throws a RuntimeException with error message..
+ * On shell error (exit code <> 0), throws a \RuntimeException with error message..
  *
  * @param string $sCmd shell command
  * @param string $sOutputPath optional redirection of standard output
+ * @param string $sErrorPath optional redirection of standard error
+ * @param bool $bAppend true to append to specified files
  * @return array array filled with every line of output from the command
- * @throws RuntimeException if shell error
+ * @throws \RuntimeException if shell error
  */
-public static function exec ($sCmd, $sOutputPath='');
+public static function exec ($sCmd, $sOutputPath = '', $sErrorPath = '', $bAppend = false);
 ```
 
 <a name="desc.flattenArray"></a>
@@ -117,7 +119,7 @@ Array(
  * @param bool $bBinaryPrefix
  * @return array a pair constituted by specified value in the most appropriate unit and that unit
  */
-public static function intToMultiple ($iValue, $bBinaryPrefix=false);
+public static function intToMultiple ($iValue, $bBinaryPrefix = false);
 ```
 Example:
 ```php
@@ -149,7 +151,7 @@ Array(
  * @param int $iDecimals Sets the number of decimal points.
  * @return string A formatted version of $number.
  */
-public static function numberFormat ($fNumber, $sDecPoint='.', $sThousandsSep=',', $iDecimals=null);
+public static function numberFormat ($fNumber, $sDecPoint = '.', $sThousandsSep = ',', $iDecimals = null);
 ```
 
 <a name="desc.isAssociativeArray"></a>
@@ -177,7 +179,7 @@ public static function isAssociativeArray (array $aArray);
  * @param int $iPrecision the optional number of decimal digits to round to (can also be negative)
  * @return string
  */
-public static function round ($fValue, $iPrecision=0);
+public static function round ($fValue, $iPrecision = 0);
 ```
 
 <a name="desc.stripBashColors"></a>
@@ -219,7 +221,7 @@ public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"')
  * @param array $aDelimiters
  * @return string
  */
-public static function ucwordWithDelimiters ($sString, array $aDelimiters=array());
+public static function ucwordWithDelimiters ($sString, array $aDelimiters = array());
 ```
 Eaxmple:
 ```php
@@ -239,7 +241,7 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
  * @param string $s
  * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
  */
-public static function utf8Encode ($s);
+public static function utf8Encode ($str);
 ```
 
 ## Copyrights & licensing
