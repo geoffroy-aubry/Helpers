@@ -223,7 +223,7 @@ public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"')
  */
 public static function ucwordWithDelimiters ($sString, array $aDelimiters = array());
 ```
-Eaxmple:
+Example:
 ```php
 echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
 ```
@@ -242,6 +242,37 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
  * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
  */
 public static function utf8Encode ($str);
+```
+
+## Usage
+
+1. Class autoloading and dependencies are managed by [Composer](http://getcomposer.org/) 
+so install it following the instructions 
+on [Composer: Installation - *nix](http://getcomposer.org/doc/00-intro.md#installation-nix)
+or just run the following command:
+```bash
+$ curl -sS https://getcomposer.org/installer | php
+```
+
+2. Add dependency to `GAubry\Helpers` into require section of your `composer.json`:
+```json
+    {
+        "require": {
+            "geoffroy-aubry/helpers": "1.*"
+        }
+    }
+```
+and run `php composer.phar install` from the terminal into the root folder of your project.
+
+3. Include Composer's autoloader and use the `GAubry\Helpers` class:
+```php
+    <?php
+    
+    require_once 'vendor/autoload.php';
+    use GAubry\Helpers\Helpers;
+    
+    Helpers::exec('ls -l /var/log');
+    …
 ```
 
 ## Copyrights & licensing
