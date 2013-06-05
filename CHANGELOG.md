@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+## Version 1.2.1 (2013-06-05)
+
+Doc :
+
+  - Add Usage section into `README.md`.
+
 ## Version 1.2.0 (2013-06-03)
 
 Unit tests:
@@ -9,7 +15,7 @@ Unit tests:
 
 Doc:
 
-  - Add URL of coveralls.io badge on README.md.
+  - Add URL of coveralls.io badge on `README.md`.
   - Code is now PSR-2 compliant.
   
 ## Version 1.1.0 (2013-05-19)
