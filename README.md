@@ -246,6 +246,8 @@ public static function utf8Encode ($str);
 
 ## Usage
 
+**Helpers** is available via [Packagist](https://packagist.org/packages/geoffroy-aubry/helpers).
+
 1. Class autoloading and dependencies are managed by [Composer](http://getcomposer.org/) 
 so install it following the instructions 
 on [Composer: Installation - *nix](http://getcomposer.org/doc/00-intro.md#installation-nix)
@@ -277,10 +279,10 @@ and run `php composer.phar install` from the terminal into the root folder of yo
 
 ## Copyrights & licensing
 Licensed under the GNU Lesser General Public License v3 (LGPL version 3).
-See [LICENSE](https://github.com/geoffroy-aubry/Helpers/blob/stable/LICENSE) file for details.
+See [LICENSE](LICENSE) file for details.
 
 ## ChangeLog
-See [CHANGELOG](https://github.com/geoffroy-aubry/Helpers/blob/stable/CHANGELOG.md) file for details.
+See [CHANGELOG](CHANGELOG.md) file for details.
 
 ## Running tests
 To run the test suite, simply:
