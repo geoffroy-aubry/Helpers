@@ -1,0 +1,3 @@
+
+var ApiGen = ApiGen || {};
+ApiGen.elements = [["c","GAubry\\Helpers\\Helpers"],["m","GAubry\\Helpers\\Helpers::__construct()"],["m","GAubry\\Helpers\\Helpers::arrayMergeRecursiveDistinct()"],["m","GAubry\\Helpers\\Helpers::exec()"],["m","GAubry\\Helpers\\Helpers::flattenArray()"],["m","GAubry\\Helpers\\Helpers::intToMultiple()"],["m","GAubry\\Helpers\\Helpers::isAssociativeArray()"],["m","GAubry\\Helpers\\Helpers::numberFormat()"],["m","GAubry\\Helpers\\Helpers::round()"],["m","GAubry\\Helpers\\Helpers::stripBashColors()"],["m","GAubry\\Helpers\\Helpers::strPutCSV()"],["m","GAubry\\Helpers\\Helpers::ucwordWithDelimiters()"],["m","GAubry\\Helpers\\Helpers::utf8Encode()"]];
