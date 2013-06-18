@@ -8,16 +8,27 @@ namespace GAubry\Helpers;
 class Debug
 {
 
+    /**
+     * Patterns for both HTML and CLI rendering:
+     *   %1$s = function name or '∅' if no function
+     *   %2$s = filename,
+     *   %3$d = line in filename,
+     *   %4$s = varname in parameter,
+     *   %5$s = value of parameter
+     *
+     * @var array
+     * @see self::displayTrace()
+     */
     public static $sDisplayPatterns = array(
-        'html' => '<pre><i>[function %1$s() in file %2$s, line %3$s]</i>\n<b>%4$s</b> = ',
-        'cli'  => <<<EOT
-\033[2;33;40m[function \033[1m%1\$s\033[2m in file \033[1m%2\$s\033[2m, line \033[1m%3\$s\033[2m]
-\033[1m%4\$s\033[2m = \033[0m
-
-EOT
+        'html' => '<pre><i>[function %1$s in file %2$s, line %3$d]</i><br /><b>%4$s</b> = %5$s</pre>',
+        // @codingStandardsIgnoreStart HEREDOC syntax is not supported in array by pdepend…
+        'cli'  => "\033[2;33;40m[function \033[1m%1\$s\033[2m in file \033[1m%2\$s\033[2m, line \033[1m%3\$d\033[2m]\n\033[1m%4\$s\033[2m = \033[0m\n%5\$s\n"
+        // @codingStandardsIgnoreEnd
     );
 
     /**
+     * Constructor.
+     *
      * @codeCoverageIgnore
      */
     private function __construct()
@@ -25,143 +36,165 @@ EOT
     }
 
     /**
-     * This function will return the name string of the function that called $function.
+     * Returns an array containing function name, filename and line in filename of the caller.
+     * If called out of any function, then return '' as function name.
      * To return the caller of your function, either call get_caller(), or get_caller(__FUNCTION__).
      *
      * @see http://stackoverflow.com/a/4767754
      * @author Aram Kocharyan
      * @author Geoffroy Aubry
+     *
+     * @param string $sFunctionName function whose caller is searched
+     * @param array stack trace, or debug_backtrace() by default
+     * @return array triplet: (string)function name or '', (string)filename or '', (int)line in filename or 0
      */
-    public static function getCaller ($function=NULL, $use_stack=NULL)
+    public static function getCaller ($sFunctionName = '', $aStack = array())
     {
-        if (is_array($use_stack)) {
-            // If a function stack has been provided, used that.
-            $stack = $use_stack;
-        } else {
-            // Otherwise create a fresh one.
-            $stack = debug_backtrace();
+        if ($aStack == array()) {
+            $aStack = debug_backtrace();
         }
 
-        if ($function == NULL) {
-            // We need $function to be a function name to retrieve its caller. If it is omitted, then
+        if ($sFunctionName == '') {
+            // We need $sFunctionName to be a function name to retrieve its caller. If it is omitted, then
             // we need to first find what function called get_caller(), and substitute that as the
-            // default $function. Remember that invoking get_caller() recursively will add another
+            // default $sFunctionName. Remember that invoking get_caller() recursively will add another
             // instance of it to the function stack, so tell get_caller() to use the current stack.
-            list($function, , ) = self::getCaller(__FUNCTION__, $stack);
+            list($sFunctionName, , ) = self::getCaller(__FUNCTION__, $aStack);
         }
 
-        if (is_string($function) && $function != '') {
-            // If we are given a function name as a string, go through the function stack and find
-            // it's caller.
-            for ($i = 0; $i < count($stack); $i++) {
-                $curr_function = $stack[$i];
-                // Make sure that a caller exists, a function being called within the main script won't have a caller.
-                if ($curr_function['function'] == $function && ($i + 1) < count($stack)) {
-                    if (preg_match("/^(.*?)\((\d+)\) : eval\(\)\\'d code$/i", $stack[$i]['file'], $aMatches) === 1) {
-                        return array('eval', $aMatches[1], $aMatches[2]);
-                    } else {
-// preg_match("/^(.*?)\((\d+)\) : eval\(\)\\'d code$/i", $stack[$i]['file'], $aMatches);
-// var_dump('×', $stack[$i + 1]['function'], $stack[$i]['file'], $stack[$i]['line'], $aMatches, '|');
-                        return array($stack[$i + 1]['function'], $stack[$i]['file'], $stack[$i]['line']);
-                    }
+        // If we are given a function name as a string, go through the function stack and find
+        // it's caller.
+        for ($i = 0; $i < count($aStack); $i++) {
+            $aCurrFunction = $aStack[$i];
+            // Make sure that a caller exists, a function being called within the main script won't have a caller.
+            if ($aCurrFunction['function'] == $sFunctionName && ($i + 1) < count($aStack)) {
+                if (preg_match("/^(.*?)\((\d+)\) : eval\(\)\\'d code$/i", $aStack[$i]['file'], $aMatches) === 1) {
+                    return array('eval', $aMatches[1], $aMatches[2]);
+                } else {
+                    return array($aStack[$i + 1]['function'], $aStack[$i]['file'], $aStack[$i]['line']);
                 }
             }
         }
 
         // If out of any function:
-        if ($curr_function['function'] == $function) {
-            return array('', $curr_function['file'], $curr_function['line']);
+        if ($aCurrFunction['function'] == $sFunctionName) {
+            return array('', $aCurrFunction['file'], $aCurrFunction['line']);
         } else {
             // At this stage, no caller has been found, bummer.
-            return array();
+            return array('', '', 0);
         }
     }
 
     /**
      * Return the name of the first parameter of the penultimate function call.
      *
-     * TODO bug si plusieurs appels sur la même ligne…
+     * TODO bug if multiple calls in the same line…
      *
-     * @return string the name of the first parameter of the penultimate function call.
      * @see http://stackoverflow.com/a/6837836
      * @author Sebastián Grignoli
      * @author Geoffroy Aubry
+     *
+     * @param string $sFunction function called
+     * @param string $sFile file containing a call to $sFunction
+     * @param int $iLine line in $sFile containing a call to $sFunction
+     * @return string the name of the first parameter of the penultimate function call.
      */
     private static function getVarName ($sFunction, $sFile, $iLine)
     {
-        $src = file($sFile);
-        $line = $src[$iLine - 1];
-        preg_match("#$sFunction\s*\((.+)\)#", $line, $match);
+        $sContent = file($sFile);
+        $sLine = $sContent[$iLine - 1];
+        preg_match("#$sFunction\s*\((.+)\)#", $sLine, $aMatches);
 
-        /* let's count brackets to see how many of them actually belongs
-         to the var name
-        Eg:   die(catch_param($this->getUser()->hasCredential("delete")));
-        We want:       $this->getUser()->hasCredential("delete")
-        */
-        $max = strlen($match[1]);
-        $varname = '';
-        $c = 0;
-        for($i = 0; $i < $max; $i++) {
-            if ($match[1]{$i} == '(' ) {
-                $c++;
-            } elseif ($match[1]{$i} == ')') {
-                $c--;
-                if ($c < 0) {
+        // Let's count brackets to see how many of them actually belongs to the var name.
+        // e.g.:    die(catch_param($this->getUser()->hasCredential("delete")));
+        // We want: $this->getUser()->hasCredential("delete")
+        $iMax = strlen($aMatches[1]);
+        $sVarname = '';
+        $iNb = 0;
+        for ($i = 0; $i < $iMax; $i++) {
+            $char = substr($aMatches[1], $i, 1);
+            if ($char == '(') {
+                $iNb++;
+            } elseif ($char == ')') {
+                $iNb--;
+                if ($iNb < 0) {
                     break;
                 }
             }
-            $varname .= $match[1]{$i};
+            $sVarname .= $char;
         }
 
         // $varname now holds the name of the passed variable ('$' included)
-        // Eg:   catch_param($hello)
-        //             => $varname = "$hello"
+        // e.g.: catch_param($hello)
+        //             => $sVarname = "$hello"
         // or the whole expression evaluated
-        // Eg:   catch_param($this->getUser()->hasCredential("delete"))
-        //             => $varname = "$this->getUser()->hasCredential(\"delete\")"
-
-        return $varname;
+        // e.g.: catch_param($this->getUser()->hasCredential("delete"))
+        //             => $sVarname = "$this->getUser()->hasCredential(\"delete\")"
+        return $sVarname;
     }
 
-    private static function displayTitle ($sPattern)
+    /**
+     * Use specified pattern to display function name, filename, line in filename,
+     * varname in parameter and value of this parameter of the caller.
+     *
+     * @param string $sPattern key of self::$sDisplayPatterns
+     * @param string $sValue value of the parameter of the caller
+     * @see self::$sDisplayPatterns
+     */
+    private static function displayTrace ($sPattern, $sValue)
     {
         list($sDebugFunction, , ) = self::getCaller();
         list($sFunction, $sFile, $sLine) = self::getCaller($sDebugFunction);
         $sFunction = (empty($sFunction) ? '∅' : "$sFunction()");
         $sVarName = self::getVarName($sDebugFunction, $sFile, $sLine);
-        echo sprintf(self::$sDisplayPatterns[$sPattern], $sFunction, $sFile, $sLine, $sVarName);
+        echo sprintf(self::$sDisplayPatterns[$sPattern], $sFunction, $sFile, $sLine, $sVarName, $sValue);
     }
 
+    /**
+     * Display an HTML trace containing a var_dump() of the specified value.
+     *
+     * @param mixed $mValue value to pass to var_dump()
+     */
     public static function htmlVarDump ($mValue)
     {
         ob_start();
         var_dump($mValue);
         $sOut = ob_get_contents();
         ob_end_clean();
-
-        self::displayTitle('html');
-        echo htmlspecialchars($sOut, ENT_QUOTES);
-        echo '</pre>';
+        self::displayTrace('html', htmlspecialchars($sOut, ENT_QUOTES));
     }
 
+    /**
+     * Display an HTML trace containing a print_r() of the specified value.
+     *
+     * @param mixed $mValue value to pass to print_r()
+     */
     public static function htmlPrintr ($mValue)
     {
-        self::displayTitle('html');
-        echo htmlspecialchars(print_r($mValue, true), ENT_QUOTES);
-        echo '</pre>';
+        self::displayTrace('html', htmlspecialchars(print_r($mValue, true), ENT_QUOTES));
     }
 
+    /**
+     * Display a CLI trace containing a var_dump() of the specified value.
+     *
+     * @param mixed $mValue value to pass to var_dump()
+     */
     public static function varDump ($mValue)
     {
-        self::displayTitle('cli');
+        ob_start();
         var_dump($mValue);
-        echo PHP_EOL;
+        $sOut = ob_get_contents();
+        ob_end_clean();
+        self::displayTrace('cli', $sOut);
     }
 
+    /**
+     * Display a CLI trace containing a print_r() of the specified value.
+     *
+     * @param mixed $mValue value to pass to print_r()
+     */
     public static function printr ($mValue)
     {
-        self::displayTitle('cli');
-        print_r($mValue);
-        echo PHP_EOL;
+        self::displayTrace('cli', print_r($mValue, true));
     }
 }
