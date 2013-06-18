@@ -836,12 +836,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/satooshi/php-coveralls.git",
-                "reference": "24bc7283507001d8b9068b6c93715ea3cdf8b24f"
+                "reference": "6193efec1a6aa15d953ca0f87afab39d1dd98489"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/24bc7283507001d8b9068b6c93715ea3cdf8b24f",
-                "reference": "24bc7283507001d8b9068b6c93715ea3cdf8b24f",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/6193efec1a6aa15d953ca0f87afab39d1dd98489",
+                "reference": "6193efec1a6aa15d953ca0f87afab39d1dd98489",
                 "shasum": ""
             },
             "require": {
@@ -898,7 +898,7 @@
                 "github",
                 "test"
             ],
-            "time": "2013-05-13 15:19:54"
+            "time": "2013-06-15 04:57:08"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -1070,17 +1070,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.3.0-RC1"
+                "reference": "v2.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.0-RC1",
-                "reference": "v2.3.0-RC1",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.1",
+                "reference": "v2.3.1",
                 "shasum": ""
             },
             "require": {
