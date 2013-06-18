@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+## Version 1.3.0 (2013-06-18)
+
+Feature:
+
+  - Add `Debug` class with unit tests and doc.
+
 ## Version 1.2.2 (2013-06-14)
 
 Doc:

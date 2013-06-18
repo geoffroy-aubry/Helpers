@@ -1,7 +1,7 @@
 {
     "name":         "geoffroy-aubry/helpers",
-    "description":  "Some helpers used in several personal packages.",
-    "keywords":     ["helpers", "tools"],
+    "description":  "Some helpers used in several personal packages and a Debug class useful for don't forgetting where debug traces are.",
+    "keywords":     ["helpers", "tools", "debug"],
     "type":         "library",
     "license":      "LGPL-3.0+",
     "authors":      [
