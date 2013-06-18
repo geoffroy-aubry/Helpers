@@ -2,9 +2,13 @@
 [![Build Status](https://secure.travis-ci.org/geoffroy-aubry/Helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/Helpers)
 [![Coverage Status](https://coveralls.io/repos/geoffroy-aubry/Helpers/badge.png?branch=stable)](https://coveralls.io/r/geoffroy-aubry/Helpers)
 
-Some helpers used in several personal packages.
+Some helpers used in several personal packages
+and a `Debug` class useful for don't forgetting where debug traces are.
 
 ## Description
+
+### Helpers class
+
 Static methods of `Helpers` class:
 
 * [arrayMergeRecursiveDistinct](#desc.arrayMergeRecursiveDistinct)  
@@ -20,7 +24,7 @@ Static methods of `Helpers` class:
 * [utf8Encode](#desc.utf8Encode)  
 
 <a name="desc.arrayMergeRecursiveDistinct"></a>
-### arrayMergeRecursiveDistinct()
+#### arrayMergeRecursiveDistinct()
 ```php
 /**
  * array_merge_recursive() does indeed merge arrays, but it converts values with duplicate
@@ -56,7 +60,7 @@ public static function arrayMergeRecursiveDistinct (array $aArray1, array $aArra
 ```
 
 <a name="desc.exec"></a>
-### exec()
+#### exec()
 ```php
 /**
  * Executes the given shell command and returns an array filled with every line of output from the command.
@@ -74,7 +78,7 @@ public static function exec ($sCmd, $sOutputPath = '', $sErrorPath = '', $bAppen
 ```
 
 <a name="desc.flattenArray"></a>
-### flattenArray()
+#### flattenArray()
 ```php
 /**
  * Flatten a multidimensional array (keys are ignored).
@@ -107,7 +111,7 @@ Array(
 ```
 
 <a name="desc.intToMultiple"></a>
-### intToMultiple()
+#### intToMultiple()
 ```php
 /**
  * Returns specified value in the most appropriate unit, with that unit.
@@ -139,7 +143,7 @@ Array(
 ```
 
 <a name="desc.numberFormat"></a>
-### numberFormat()
+#### numberFormat()
 ```php
 /**
  * Format a number with grouped thousands.
@@ -155,7 +159,7 @@ public static function numberFormat ($fNumber, $sDecPoint = '.', $sThousandsSep 
 ```
 
 <a name="desc.isAssociativeArray"></a>
-### isAssociativeArray()
+#### isAssociativeArray()
 ```php
 /**
  * Returns TRUE iff the specified array is associative.
@@ -170,7 +174,7 @@ public static function isAssociativeArray (array $aArray);
 ```
 
 <a name="desc.round"></a>
-### round()
+#### round()
 ```php
 /**
  * Rounds specified value with precision $iPrecision as native round() function, but keep trailing zeros.
@@ -183,7 +187,7 @@ public static function round ($fValue, $iPrecision = 0);
 ```
 
 <a name="desc.stripBashColors"></a>
-### stripBashColors()
+#### stripBashColors()
 ```php
 /**
  * Remove all Bash color sequences from the specified string.
@@ -195,7 +199,7 @@ public static function stripBashColors ($sMsg);
 ```
 
 <a name="desc.strPutCSV"></a>
-### strPutCSV()
+#### strPutCSV()
 ```php
 /**
  * Formats a line passed as a fields array as CSV and return it, without the trailing newline.
@@ -210,7 +214,7 @@ public static function strPutCSV ($aInput, $sDelimiter = ',', $sEnclosure = '"')
 ```
 
 <a name="desc.ucwordWithDelimiters"></a>
-### ucwordWithDelimiters()
+#### ucwordWithDelimiters()
 ```php
 /**
  * Returns a string with the first character of each word in specified string capitalized,
@@ -233,7 +237,7 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
 ```
 
 <a name="desc.utf8Encode"></a>
-### utf8Encode()
+#### utf8Encode()
 ```php
 /**
  * Returns the UTF-8 translation of the specified string, only if not already in UTF-8.
@@ -242,6 +246,66 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
  * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
  */
 public static function utf8Encode ($str);
+```
+
+### Debug class
+
+Debug class useful for don't forgetting where debug traces are.
+
+Automatically decorates `print_r()` and `var_dump()` with following information:
+  * file and line of the caller
+  * name of function/method containing the call
+  * name of the parameter passed during call
+
+#### Demo
+
+See [debug.php](examples/debug.php) script for an example:
+```bash
+$ php examples/debug.php
+```
+
+Here is the result:
+
+![result of debug.php](examples/debug.png "result of debug.php")
+
+#### htmlVarDump()
+```php
+/**
+ * Display an HTML trace containing a var_dump() of the specified value.
+ *
+ * @param mixed $mValue value to pass to var_dump()
+ */
+public static function htmlVarDump ($mValue);
+```
+    
+#### htmlPrintr()
+```php
+/**
+ * Display an HTML trace containing a print_r() of the specified value.
+ *
+ * @param mixed $mValue value to pass to print_r()
+ */
+public static function htmlPrintr ($mValue);
+```
+
+#### printr()
+```php
+/**
+ * Display a CLI trace containing a print_r() of the specified value.
+ *
+ * @param mixed $mValue value to pass to print_r()
+ */
+public static function printr ($mValue);
+```
+
+#### varDump()
+```php
+/**
+ * Display a CLI trace containing a var_dump() of the specified value.
+ *
+ * @param mixed $mValue value to pass to var_dump()
+ */
+public static function varDump ($mValue);
 ```
 
 ## Usage
@@ -266,14 +330,16 @@ $ curl -sS https://getcomposer.org/installer | php
 ```
 and run `php composer.phar install` from the terminal into the root folder of your project.
 
-3. Include Composer's autoloader and use the `GAubry\Helpers` class:
+3. Include Composer's autoloader and use the `GAubry\Helpers` classes:
 ```php
     <?php
     
     require_once 'vendor/autoload.php';
     use GAubry\Helpers\Helpers;
+    use GAubry\Helpers\Debug;
     
     Helpers::exec('ls -l /var/log');
+    Debug::printr($value);
     …
 ```
 
