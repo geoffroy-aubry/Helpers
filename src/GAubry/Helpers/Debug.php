@@ -3,7 +3,29 @@
 namespace GAubry\Helpers;
 
 /**
- * Outils divers et variés...
+ * Debug class useful for don't forgetting where debug traces are.
+ *
+ * Automatically decorates print_r() and var_dump() with following information:
+ *   – file and line of the caller
+ *   – name of function/method containing the call
+ *   – name of the parameter passed during call
+ *
+ * Example:
+ * <code>
+ *   function f($value) {Debug::printr($value);}
+ * </code>
+ *
+ * Result:
+ * <code>
+ *   [function f() in file /path/to/file.php, line 31]
+ *   $value =
+ *   Array
+ *   (
+ *       [0] => 'xyz'
+ *   )
+ * </code>
+ *
+ * See examples/debug.php for a complete example.
  */
 class Debug
 {
