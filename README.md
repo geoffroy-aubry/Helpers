@@ -9,7 +9,13 @@ and a `Debug` class useful for don't forgetting where debug traces are.
 
 ## Description
 
-### Helpers class
+Two classes: 
+
+  1. [Helpers](#desc.Helpers), 
+  2. [Debug](#desc.Debug).
+
+<a name="desc.Helpers"></a>
+### 1. Helpers class
 
 Static methods of `Helpers` class:
 
@@ -250,7 +256,8 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
 public static function utf8Encode ($str);
 ```
 
-### Debug class
+<a name="desc.Debug"></a>
+### 2. Debug class
 
 Debug class useful for don't forgetting where debug traces are.
 
@@ -357,16 +364,33 @@ $ php vendor/bin/apigen.php -c apigen.neon
 Licensed under the GNU Lesser General Public License v3 (LGPL version 3).
 See [LICENSE](LICENSE) file for details.
 
-## ChangeLog
+## Change log
 See [CHANGELOG](CHANGELOG.md) file for details.
 
-## Running tests
-To run the test suite, simply:
+## Continuous integration
 
-```bash
-$ cp phpunit-dist.php phpunit.php    # and adapt, if necessary
-$ phpunit -c phpunit.xml
-```
+[![Build Status](https://secure.travis-ci.org/geoffroy-aubry/Helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/Helpers)
+[![Coverage Status](https://coveralls.io/repos/geoffroy-aubry/Helpers/badge.png?branch=stable)](https://coveralls.io/r/geoffroy-aubry/Helpers)
+
+Following commands are executed during each build and must report neither errors nor warnings:
+
+ * Unit tests with [PHPUnit](https://github.com/sebastianbergmann/phpunit/):
+
+    ```bash
+    $ php vendor/bin/phpunit --configuration phpunit.xml
+    ```
+
+ *  Coding standards with [PHP CodeSniffer](http://pear.php.net/package/PHP_CodeSniffer):
+
+    ```bash
+    $ php vendor/bin/phpcs --standard=PSR2 src/ tests/ -v
+    ```
+
+ *  Code quality with [PHP Mess Detector](http://phpmd.org/):
+
+    ```bash
+    $ php vendor/bin/phpmd src/ text codesize,design,unusedcode,naming,controversial
+    ```
 
 ## Git branching model
 The git branching model used for development is the one described and assisted by `twgit` tool: [https://github.com/Twenga/twgit](https://github.com/Twenga/twgit).
