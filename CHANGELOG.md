@@ -1,6 +1,13 @@
-ChangeLog
-=========
+Change log
+==========
 
+## Version 1.3.1 (2013-07-03)
+
+Doc:
+
+  - [#3](https://github.com/geoffroy-aubry/Helpers/issues/3): Add continuous integration section in `README.md`.
+  - [#1](https://github.com/geoffroy-aubry/Helpers/issues/1): Add badge poser in `README.md`.
+  
 ## Version 1.3.0 (2013-06-18)
 
 Feature:
