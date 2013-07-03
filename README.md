@@ -1,4 +1,6 @@
 # Helpers
+
+[![Latest stable version](https://poser.pugx.org/geoffroy-aubry/Helpers/v/stable.png "Latest stable version")](https://packagist.org/packages/geoffroy-aubry/Helpers)
 [![Build Status](https://secure.travis-ci.org/geoffroy-aubry/Helpers.png?branch=stable)](http://travis-ci.org/geoffroy-aubry/Helpers)
 [![Coverage Status](https://coveralls.io/repos/geoffroy-aubry/Helpers/badge.png?branch=stable)](https://coveralls.io/r/geoffroy-aubry/Helpers)
 
