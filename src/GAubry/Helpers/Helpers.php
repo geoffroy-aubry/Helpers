@@ -48,7 +48,7 @@ class Helpers
      */
     public static function utf8Encode ($str)
     {
-        return (utf8_encode(utf8_decode($str)) == $str ? $str : utf8_encode($str));
+        return (preg_match('//u', $str) === 1 ? $str : utf8_encode($str));
     }
 
     /**

@@ -347,4 +347,29 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals($aErrorExpected, file($sStdErr, FILE_IGNORE_NEW_LINES));
     }
+
+    /**
+     * @covers \GAubry\Helpers\Helpers::utf8Encode
+     * @dataProvider dataProviderTestUtf8Encode
+     *
+     * @param string $sSrc
+     * @param string $sExpected
+     */
+    public function testUtf8Encode ($sSrc, $sExpected)
+    {
+        $this->assertEquals($sExpected, Helpers::utf8Encode($sSrc));
+    }
+
+    /**
+     * Data provider pour testUtf8Encode()
+     */
+    public function dataProviderTestUtf8Encode ()
+    {
+        return array(
+            array('', ''),
+            array('a', 'a'),
+            array('Ⓐ', 'Ⓐ'),
+            array(utf8_decode('é'), 'é'),
+        );
+    }
 }
