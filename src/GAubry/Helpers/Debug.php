@@ -44,7 +44,7 @@ class Debug
     public static $sDisplayPatterns = array(
         'html' => '<pre><i>[function %1$s in file %2$s, line %3$d]</i><br /><b>%4$s</b> = %5$s</pre>',
         // @codingStandardsIgnoreStart HEREDOC syntax is not supported in array by pdepend…
-        'cli'  => "\033[2;33;40m[function \033[1m%1\$s\033[2m in file \033[1m%2\$s\033[2m, line \033[1m%3\$d\033[2m]\n\033[1m%4\$s\033[2m = \033[0m\n%5\$s\n"
+        'cli'  => "\033[2;33;40m[function \033[1m%1\$s\033[22m in file \033[1m%2\$s\033[22m, line \033[1m%3\$d\033[22m]\n\033[1m%4\$s\033[22m = \033[0m\n%5\$s\n"
         // @codingStandardsIgnoreEnd
     );
 
@@ -169,6 +169,9 @@ class Debug
         list($sFunction, $sFile, $sLine) = self::getCaller($sDebugFunction);
         $sFunction = (empty($sFunction) ? '∅' : "$sFunction()");
         $sVarName = self::getVarName($sDebugFunction, $sFile, $sLine);
+        if (strlen($sFile) > 50) {
+            $sFile = '...' . substr($sFile, -50);
+        }
         echo sprintf(self::$sDisplayPatterns[$sPattern], $sFunction, $sFile, $sLine, $sVarName, $sValue);
     }
 
