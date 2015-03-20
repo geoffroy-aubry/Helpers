@@ -7,8 +7,8 @@ php:
 
 before_script:
   - cp phpunit-dist.xml phpunit.xml
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --no-interaction
+  - composer self-update
+  - composer install --dev --no-interaction
 
 script:
   - mkdir -p build/logs

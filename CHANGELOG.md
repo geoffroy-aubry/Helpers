@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## Version 1.4.0 (2015-03-20)
+
+Feature:
+
+  - [#4](https://github.com/geoffroy-aubry/Helpers/issues/4): Truncate too long paths when debugging.
+
 ## Version 1.3.2 (2013-11-08)
 
 Fixes:

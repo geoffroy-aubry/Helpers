@@ -3,6 +3,7 @@
 /.project
 /build/
 *~
+.idea
 /vendor/
 composer.phar
-/.twgit_features_subject
+/.twgit*
