@@ -41,7 +41,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['cli'],
             __FUNCTION__ . '()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             '$mValue',
             $sExpected
@@ -73,7 +73,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['html'],
             __FUNCTION__ . '()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             '$mValue',
             htmlspecialchars($sExpected, ENT_QUOTES)
@@ -100,7 +100,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['cli'],
             __FUNCTION__ . '()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             '$mValue',
             print_r($mValue, true)
@@ -127,7 +127,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['html'],
             __FUNCTION__ . '()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             '$mValue',
             htmlspecialchars(print_r($mValue, true), ENT_QUOTES)
@@ -175,7 +175,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['cli'],
             'eval()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             "'$sValue'",
             $sExpected
@@ -206,7 +206,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $sExpected = sprintf(
             Debug::$sDisplayPatterns['cli'],
             __FUNCTION__ . '()',
-            __FILE__,
+            '...' . substr(__FILE__, -50),
             __LINE__ + 6,
             "'$sValue'",
             $sExpected
