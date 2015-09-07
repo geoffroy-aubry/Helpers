@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## Version 1.5.0 (2015-09-07)
+
+Feature:
+
+  - Add both `Helpers::getCurrentTimeWithCS()` and `Helpers::dateTimeToTimestamp()` methods.
+  
 ## Version 1.4.0 (2015-03-20)
 
 Feature:
