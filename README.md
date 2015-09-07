@@ -30,6 +30,8 @@ Static methods of `Helpers` class:
 * [strPutCSV](#desc.strPutCSV)  
 * [ucwordWithDelimiters](#desc.ucwordWithDelimiters)  
 * [utf8Encode](#desc.utf8Encode)  
+* [getCurrentTimeWithCS](#desc.getCurrentTimeWithCS)  
+* [dateTimeToTimestamp](#desc.dateTimeToTimestamp)  
 
 <a name="desc.arrayMergeRecursiveDistinct"></a>
 #### arrayMergeRecursiveDistinct()
@@ -255,6 +257,53 @@ echo Helpers::ucwordWithDelimiters("hel-lo wo'rld", array('-', "'"));
  */
 public static function utf8Encode ($str);
 ```
+
+<a name="desc.getCurrentTimeWithCS"></a>
+#### getCurrentTimeWithCS()
+```php
+/**
+ * Returns current time with hundredths of a second.
+ *
+ * @param string $sFormat including %s for cs, eg: 'Y-m-d H:i:s.%s'
+ * @return string current time with hundredths of a second.
+ */
+public static function getCurrentTimeWithCS ($sFormat);
+```
+Example:
+```php
+date_default_timezone_set('UTC');
+echo Helpers::getCurrentTimeWithCS('Y-m-d H:i:s');
+echo Helpers::getCurrentTimeWithCS('Y-m-d H:i:s.%s');
+```
+⇒
+```php
+2015-09-07 21:56:06
+2015-09-07 21:56:06.579394
+```
+
+<a name="desc.dateTimeToTimestamp"></a>
+#### dateTimeToTimestamp()
+```php
+/**
+ * Returns 'Y-m-d H:i:s[.cs]' date to timestamp, where '.cs' stands for optional hundredths of a second.
+ *
+ * @param string $sDate at format 'Y-m-d H:i:s[.cs]'
+ * @return float 'Y-m-d H:i:s[.cs]' date to timestamp, where '.cs' stands for optional hundredths of a second.
+ */
+public static function dateTimeToTimestamp ($sDate);
+```
+Example:
+```php
+date_default_timezone_set('UTC');
+echo Helpers::dateTimeToTimestamp('2015-09-07 00:00:00');
+echo Helpers::dateTimeToTimestamp('2015-09-07 00:00:00.12');
+```
+⇒
+```php
+1441584000
+1441584000.12
+```
+
 
 <a name="desc.Debug"></a>
 ### 2. Debug class

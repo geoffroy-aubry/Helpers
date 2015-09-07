@@ -294,4 +294,37 @@ class Helpers
         }
         return false;
     }
+
+    /**
+     * Returns current time with hundredths of a second.
+     *
+     * @param string $sFormat including %s for cs, eg: 'Y-m-d H:i:s.%s'
+     * @return string current time with hundredths of a second.
+     */
+    public static function getCurrentTimeWithCS ($sFormat)
+    {
+        $aMicrotime = explode(' ', microtime());
+        $sFilledFormat = sprintf($sFormat, $aMicrotime[0]*1000000);
+        $sDate = date($sFilledFormat, $aMicrotime[1]);
+        return $sDate;
+    }
+
+    /**
+     * Returns 'Y-m-d H:i:s[.cs]' date to timestamp, where '.cs' stands for optional hundredths of a second.
+     *
+     * @param string $sDate at format 'Y-m-d H:i:s[.cs]'
+     * @return float 'Y-m-d H:i:s[.cs]' date to timestamp, where '.cs' stands for optional hundredths of a second.
+     */
+    public static function dateTimeToTimestamp ($sDate)
+    {
+        if (strpos($sDate, '.') === false) {
+            $sCS = '0';
+        } else {
+            $sCS = '0' . strstr($sDate, '.');
+            $sDate = strstr($sDate, '.', true);
+        }
+        $aDate = explode(':', strtr($sDate, '- ', '::'));
+        $iTs = mktime($aDate[3], $aDate[4], $aDate[5], $aDate[1], $aDate[2], (int)$aDate[0]);
+        return $iTs + (float)$sCS;
+    }
 }
