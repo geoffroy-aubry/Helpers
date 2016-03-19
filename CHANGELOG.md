@@ -1,6 +1,13 @@
 Change log
 ==========
 
+## Version 1.6.0 (2016-03-19)
+
+Feature:
+
+  - Add `Counter` class: Display stats about number of "events", with cumulative sum and diff since last call,
+    and configurable delay between two stats displays.
+  
 ## Version 1.5.0 (2015-09-07)
 
 Feature:
