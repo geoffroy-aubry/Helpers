@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## Version 1.7.0 (2016-03-28)
+
+Feature:
+
+  - Add a globally unique id generator using Mongo Object ID algorithm: `Helpers::generateMongoId()`.
+
 ## Version 1.6.0 (2016-03-19)
 
 Feature:
