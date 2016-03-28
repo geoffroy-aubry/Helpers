@@ -32,6 +32,7 @@ Static methods of `Helpers` class:
 * [utf8Encode](#desc.utf8Encode)  
 * [getCurrentTimeWithCS](#desc.getCurrentTimeWithCS)  
 * [dateTimeToTimestamp](#desc.dateTimeToTimestamp)  
+* [generateMongoId](#desc.generateMongoId)  
 
 <a name="desc.arrayMergeRecursiveDistinct"></a>
 #### arrayMergeRecursiveDistinct()
@@ -302,6 +303,45 @@ echo Helpers::dateTimeToTimestamp('2015-09-07 00:00:00.12');
 ```php
 1441584000
 1441584000.12
+```
+
+<a name="desc.generateMongoId"></a>
+#### generateMongoId()
+```php
+/**
+ * Generates a globally unique id generator using Mongo Object ID algorithm.
+ *
+ * The 12-byte ObjectId value consists of:
+ * - a 4-byte value representing the seconds since the Unix epoch,
+ * - a 3-byte machine identifier,
+ * - a 2-byte process id, and
+ * - a 3-byte counter, starting with a random value.
+ * @see https://docs.mongodb.org/manual/reference/method/ObjectId/
+ *
+ * Uses SKleeschulte\Base32 because base_convert() may lose precision on large numbers due to properties related
+ * to the internal "double" or "float" type used.
+ * @see http://php.net/manual/function.base-convert.php
+ *
+ * @param  int    $iTimestamp Default: time()
+ * @param  bool   $bBase32 Base32 (RFC 4648) or hex output?
+ * @return string 20 base32-char or 24 hex-car MongoId.
+ *
+ * @see https://www.ietf.org/rfc/rfc4648.txt
+ * @see http://stackoverflow.com/questions/14370143/create-mongodb-objectid-from-date-in-the-past-using-php-driver
+ */
+public static function generateMongoId ($iTimestamp = 0, $bBase32 = true);
+```
+Example:
+```php
+var_dump(generateMongoId());
+var_dump(generateMongoId(time()));
+var_dump(generateMongoId(time(), false));
+```
+⇒
+```php
+string(20) "k34hekzumvsqs2ycyaoa"
+string(20) "k34hekzumvsqs2ycyaoq"
+string(24) "56f8722b346565096b02c01e"
 ```
 
 

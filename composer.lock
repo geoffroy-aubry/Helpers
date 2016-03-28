@@ -1,11 +1,64 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "20d4a0820da09783ebaa0121938f5e7b",
-    "packages": [],
+    "hash": "ded244d3932637ab25e19d19535af6ed",
+    "content-hash": "2c360d76a170bc2dd950c00d68ee4184",
+    "packages": [
+        {
+            "name": "skleeschulte/base32",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/skleeschulte/php-base32.git",
+                "reference": "42b651598d42ca51c00a6e71d2587e64e6e80734"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/skleeschulte/php-base32/zipball/42b651598d42ca51c00a6e71d2587e64e6e80734",
+                "reference": "42b651598d42ca51c00a6e71d2587e64e6e80734",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SKleeschulte\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stefan Kleeschulte",
+                    "email": "stefan.kleeschulte@smk.biz",
+                    "homepage": "http://rays-blog.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Base32 encoding and decoding class (RFC 4648, RFC 4648 extended hex, Crockford, z-base-32/Zooko).",
+            "homepage": "https://github.com/skleeschulte/php-base32",
+            "keywords": [
+                "base32",
+                "bcmath",
+                "bytestring",
+                "crockford",
+                "decode",
+                "encode",
+                "integer",
+                "rfc4686",
+                "z-base-32",
+                "zooko"
+            ],
+            "time": "2015-11-19 14:01:26"
+        }
+    ],
     "packages-dev": [
         {
             "name": "andrewsville/php-token-reflection",
@@ -59,12 +112,12 @@
             "version": "2.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/apigen/apigen",
-                "reference": "2.8.0"
+                "url": "https://github.com/apigen/ApiGen.git",
+                "reference": "4987551632c3ad3fb7e89cf6dc3fe601e45578c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/apigen/apigen/zipball/2.8.0",
+                "url": "https://api.github.com/repos/apigen/ApiGen/zipball/4987551632c3ad3fb7e89cf6dc3fe601e45578c3",
                 "reference": "2.8.0",
                 "shasum": ""
             },
@@ -2208,7 +2261,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/2fbf803803d179ab1082807308a67bbd5a760c70",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/50c60bb64054974f8ed7540ae6e75fd7981a5fd3",
                 "reference": "2fbf803803d179ab1082807308a67bbd5a760c70",
                 "shasum": ""
             },
@@ -2721,12 +2774,12 @@
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Config.git",
-                "reference": "7a47189c7667ca69bcaafd19ef8a8941db449a2c"
+                "url": "https://github.com/symfony/config.git",
+                "reference": "8e0a8b5eddc606f6232dd9107e4adec69ed8721e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/7a47189c7667ca69bcaafd19ef8a8941db449a2c",
+                "url": "https://api.github.com/repos/symfony/config/zipball/8e0a8b5eddc606f6232dd9107e4adec69ed8721e",
                 "reference": "7a47189c7667ca69bcaafd19ef8a8941db449a2c",
                 "shasum": ""
             },
@@ -2772,12 +2825,12 @@
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "53f86497ccd01677e22435cfb7262599450a90d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/53f86497ccd01677e22435cfb7262599450a90d1",
+                "url": "https://api.github.com/repos/symfony/console/zipball/53f86497ccd01677e22435cfb7262599450a90d1",
                 "reference": "53f86497ccd01677e22435cfb7262599450a90d1",
                 "shasum": ""
             },
@@ -2830,12 +2883,12 @@
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/DependencyInjection.git",
+                "url": "https://github.com/symfony/dependency-injection.git",
                 "reference": "a49245b2beebe332924561c30772b16e1d32f13a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/a49245b2beebe332924561c30772b16e1d32f13a",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/a49245b2beebe332924561c30772b16e1d32f13a",
                 "reference": "a49245b2beebe332924561c30772b16e1d32f13a",
                 "shasum": ""
             },
@@ -2891,12 +2944,12 @@
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/EventDispatcher.git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
                 "reference": "70f7c8478739ad21e3deef0d977b38c77f1fb284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/70f7c8478739ad21e3deef0d977b38c77f1fb284",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/70f7c8478739ad21e3deef0d977b38c77f1fb284",
                 "reference": "70f7c8478739ad21e3deef0d977b38c77f1fb284",
                 "shasum": ""
             },
@@ -2950,12 +3003,12 @@
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
+                "url": "https://github.com/symfony/filesystem.git",
                 "reference": "fdc5f151bc2db066b51870d5bea3773d915ced0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/fdc5f151bc2db066b51870d5bea3773d915ced0b",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/fdc5f151bc2db066b51870d5bea3773d915ced0b",
                 "reference": "fdc5f151bc2db066b51870d5bea3773d915ced0b",
                 "shasum": ""
             },

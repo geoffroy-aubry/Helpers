@@ -67,7 +67,7 @@ class Debug
      * @author Geoffroy Aubry
      *
      * @param string $sFunctionName function whose caller is searched
-     * @param array stack trace, or debug_backtrace() by default
+     * @param array $aStack trace, or debug_backtrace() by default
      * @return array triplet: (string)function name or '', (string)filename or '', (int)line in filename or 0
      */
     public static function getCaller ($sFunctionName = '', $aStack = array())

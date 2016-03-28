@@ -2,6 +2,8 @@
 
 namespace GAubry\Helpers;
 
+use SKleeschulte\Base32;
+
 /**
  * Some helpers used in several personal packages.
  * @SuppressWarnings(TooManyMethods)
@@ -43,7 +45,7 @@ class Helpers
     /**
      * Returns the UTF-8 translation of the specified string, only if not already in UTF-8.
      *
-     * @param string $s
+     * @param string $str
      * @return string the UTF-8 translation of the specified string, only if not already in UTF-8.
      */
     public static function utf8Encode ($str)
@@ -326,5 +328,45 @@ class Helpers
         $aDate = explode(':', strtr($sDate, '- ', '::'));
         $iTs = mktime($aDate[3], $aDate[4], $aDate[5], $aDate[1], $aDate[2], (int)$aDate[0]);
         return $iTs + (float)$sCS;
+    }
+
+    /**
+     * Generates a globally unique id generator using Mongo Object ID algorithm.
+     *
+     * The 12-byte ObjectId value consists of:
+     * - a 4-byte value representing the seconds since the Unix epoch,
+     * - a 3-byte machine identifier,
+     * - a 2-byte process id, and
+     * - a 3-byte counter, starting with a random value.
+     * @see https://docs.mongodb.org/manual/reference/method/ObjectId/
+     *
+     * Uses SKleeschulte\Base32 because base_convert() may lose precision on large numbers due to properties related
+     * to the internal "double" or "float" type used.
+     * @see http://php.net/manual/function.base-convert.php
+     *
+     * @param  int    $iTimestamp Default: time()
+     * @param  bool   $bBase32 Base32 (RFC 4648) or hex output?
+     * @return string 20 base32-char or 24 hex-car MongoId.
+     *
+     * @see https://www.ietf.org/rfc/rfc4648.txt
+     * @see http://stackoverflow.com/questions/14370143/create-mongodb-objectid-from-date-in-the-past-using-php-driver
+     */
+    public static function generateMongoId ($iTimestamp = 0, $bBase32 = true)
+    {
+        static $inc = 0;
+        if ($inc === 0) {
+            // set with microseconds:
+            $inc = (int)substr(microtime(), 2, 6);
+        }
+
+        $bin = sprintf(
+            '%s%s%s%s',
+            pack('N', $iTimestamp ?: time()),
+            substr(md5(gethostname()), 0, 3),
+            pack('n', posix_getpid()),
+            substr(pack('N', $inc++), 1, 3)
+        );
+
+        return $bBase32 ? strtolower(Base32::encodeByteStr($bin, true)) : bin2hex($bin);
     }
 }
