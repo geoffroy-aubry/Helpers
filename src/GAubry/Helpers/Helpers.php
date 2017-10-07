@@ -2,6 +2,7 @@
 
 namespace GAubry\Helpers;
 
+use GAubry\Helpers\Exception\ExitCodeException;
 use SKleeschulte\Base32;
 
 /**
@@ -103,7 +104,7 @@ class Helpers
 
         // result
         if ($iReturnCode !== 0) {
-            throw new \RuntimeException(
+            throw new ExitCodeException(
                 "Exit code not null: $iReturnCode. Result: '" . implode("\n", $aError) . "'",
                 $iReturnCode
             );
