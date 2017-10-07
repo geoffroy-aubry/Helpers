@@ -3,6 +3,7 @@
 namespace GAubry\Helpers\Tests;
 
 use \GAubry\Helpers\Helpers;
+use GAubry\Helpers\Exception\ExitCodeException;
 
 class HelpersTest extends \PHPUnit_Framework_TestCase
 {
@@ -233,6 +234,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecSimpleStdOut ()
@@ -243,6 +245,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithOutputPath ()
@@ -256,6 +259,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithOutputPathWithAppend ()
@@ -269,28 +273,31 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithOnlyErrorCode ()
     {
         $sCmd = 'false';
         $aExpected = array('Hello', 'World');
-        $this->setExpectedException('\RuntimeException', "Exit code not null: 1. Result: ''", 1);
+        $this->setExpectedException(ExitCodeException::class, "Exit code not null: 1. Result: ''", 1);
         $this->assertEquals($aExpected, Helpers::exec($sCmd));
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithError ()
     {
         $sCmd = 'ls unknown_file';
         $aExpected = array('Hello', 'World');
-        $this->setExpectedException('\RuntimeException', "Exit code not null: 2. Result: '", 2);
+        $this->setExpectedException(ExitCodeException::class, "Exit code not null: 2. Result: '", 2);
         $this->assertEquals($aExpected, Helpers::exec($sCmd));
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithOutputPathWithError ()
@@ -301,7 +308,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $aExpected = array('Hello');
         try {
             Helpers::exec($sCmd, $sStdOut);
-        } catch (\RuntimeException $oException) {
+        } catch (ExitCodeException $oException) {
             $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
             $this->assertEquals(2, $oException->getCode());
         }
@@ -309,6 +316,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithOutputPathAndErrorPathWithError ()
@@ -322,7 +330,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $aErrorExpected = array('ls: cannot access unknown_file: No such file or directory');
         try {
             Helpers::exec($sCmd, $sStdOut, $sStdErr);
-        } catch (\RuntimeException $oException) {
+        } catch (ExitCodeException $oException) {
             $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
             $this->assertEquals(2, $oException->getCode());
         }
@@ -331,6 +339,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group exec
      * @covers \GAubry\Helpers\Helpers::exec
      */
     public function testExecWithErrorPathWithError ()
@@ -341,7 +350,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $aErrorExpected = array('ls: cannot access unknown_file: No such file or directory');
         try {
             Helpers::exec($sCmd, '', $sStdErr);
-        } catch (\RuntimeException $oException) {
+        } catch (ExitCodeException $oException) {
             $this->assertContains("Exit code not null: 2. Result: '", $oException->getMessage());
             $this->assertEquals(2, $oException->getCode());
         }

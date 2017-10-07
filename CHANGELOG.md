@@ -1,6 +1,12 @@
 Change log
 ==========
 
+## Version 1.8.0 (2017-10-07)
+
+Feature:
+
+  - Now `Helpers::exec()` throws an `Exception\ExitCodeException` when exit code > 0, instead of an `\RuntimeException`.
+
 ## Version 1.7.0 (2016-03-28)
 
 Feature:
